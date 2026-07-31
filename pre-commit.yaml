@@ -1,0 +1,26 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.1
+    hooks:
+    -   id: check-added-large-files
+        args: ['--maxkb=10240']
+    -   id: check-toml
+    -   id: check-merge-conflict
+    -   id: debug-statements
+    -   id: detect-private-key
+    -   id: end-of-file-fixer
+        exclude: \.md$
+    -   id: mixed-line-ending
+    -   id: trailing-whitespace
+        exclude: \.md$
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.1
+    hooks:
+    -   id: ruff-format
+        types: [python]
+    -   id: ruff
+        args: [--fix, --exit-zero]
+        types: [python]
+        pass_filenames: true
+        always_run: true
+        verbose: true

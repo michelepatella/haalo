@@ -1,0 +1,40 @@
+# Building --------------------------------------------------------------------------------------------------------
+[build-system]
+requires = ["setuptools>=73.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+# Project settings ------------------------------------------------------------------------------------------------
+[project]
+name = "haalo"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = "==3.14.6"
+
+# Required dependencies -------------------------------------------------------------------------------------------
+dependencies = [
+    "llama-index==0.14.23"
+]
+
+# Optional dependencies -------------------------------------------------------------------------------------------
+[project.optional-dependencies]
+dev = ["ruff==0.16.1", "pre-commit==4.6.1"]
+
+# Other project settings ------------------------------------------------------------------------------------------
+[project.urls]
+"Source" = "https://github.com/michelepatella/haalo"
+
+# Tools settings --------------------------------------------------------------------------------------------------
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint]
+select = ["ALL"]
+extend-select = ["D"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
