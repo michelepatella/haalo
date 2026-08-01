@@ -1,0 +1,60 @@
+[data-testid="stFileUploaderDropzone"] {
+    border: none !important;
+    background-color: transparent !important;
+    align-items: center !important;
+    display: flex !important;
+    justify-content: center !important;
+    flex-direction: column !important;
+}
+[data-testid="stFileUploaderDropzone"]:hover,
+[data-testid="stFileUploaderDropzone"]:focus,
+[data-testid="stFileUploaderDropzone"]:active,
+[data-testid="stFileUploaderDropzone"][data-is-drag-over="true"] {
+    border: none !important;
+    background-color: transparent !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+[data-testid="stBaseButton-elementToolbar"] {
+    display: none !important;
+}
+[data-testid="stFileUploaderDropzoneInstructions"] {
+    display: none !important;
+}
+
+div[data-testid="stColumn"] [data-testid="stElementContainer"],
+div[data-testid="stColumn"] div.stButton {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+}
+
+div[data-testid="stColumn"] div.stButton > button {
+    position: relative !important;
+    background-color: #FFFFFF !important;
+    background-image: none !important;
+    border: 1px solid #FFFFFF !important;
+    border-radius: 10px !important;
+    font-weight: bold !important;
+    font-size: 1.1rem !important;
+    padding: 0.6rem 2.5rem !important;
+    transition: opacity 0.2s ease !important;
+    margin: 0 auto !important;
+    outline: none !important;
+    box-shadow: none !important;
+    color: #000000 !important;
+}
+
+div[data-testid="stColumn"] div.stButton > button p,
+div[data-testid="stColumn"] div.stButton > button span {
+    background: none !important;
+    -webkit-text-fill-color: #000000 !important;
+    color: #000000 !important;
+}
+
+div[data-testid="stColumn"] div.stButton > button:hover {
+    opacity: 0.8 !important;
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+}
