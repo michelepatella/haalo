@@ -20,7 +20,7 @@ from const import (
 
 
 def render_upload_page() -> None:
-    """Renders the upload page for the Streamlit app.
+    """Render the upload page for the Streamlit app.
 
     This function displays the logo, header, and subheader, and applies
     custom CSS styling to the upload page.
@@ -69,7 +69,7 @@ def render_upload_page() -> None:
 def _save_file_to_temp(
     uploaded_file: st.runtime.uploaded_file_manager.UploadedFile,
 ) -> str:
-    """Saves an uploaded file to a temporary location on disk.
+    """Save an uploaded file to a temporary location on disk.
 
     This function takes a Streamlit UploadedFile object, reads its content,
     and writes it to a temporary file on disk.
