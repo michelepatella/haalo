@@ -28,6 +28,14 @@ UPLOAD_PAGE_PROCEED_BUTTON_LABEL = "Next ➔"
 UPLOAD_PAGE_STYLE_PATH = Path("assets/styles/upload.css")
 
 #########################################################################################
+# Preprocess Page
+#########################################################################################
+PREPROCESS_PAGE_COLUMN_LAYOUT_NARROW = [1, 2, 1]
+
+PREPROCESS_PAGE_STYLE_PATH = Path("assets/styles/preprocess.css")
+
+#########################################################################################
 # Session State
 #########################################################################################
 SESSION_STATE_UPLOADED_DOC_PATH_KEY = "uploaded_doc_path"
+SESSION_STATE_VECTOR_STORE_KEY = "vector_store"
