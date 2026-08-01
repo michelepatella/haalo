@@ -2,6 +2,7 @@
 
 import streamlit as st
 
+import preprocess
 import upload
 from const import (
     PAGE_ICON,
@@ -21,6 +22,11 @@ st.set_page_config(
 if SESSION_STATE_UPLOADED_DOC_PATH_KEY not in st.session_state:
     st.session_state[SESSION_STATE_UPLOADED_DOC_PATH_KEY] = None
 
-# Render the upload page if no document has been uploaded yet
+# Render the upload page if no document has been uploaded yet;
+# otherwise, render the preprocessing page
 if st.session_state[SESSION_STATE_UPLOADED_DOC_PATH_KEY] is None:
     upload.render_upload_page()
+else:
+    preprocess.render_preprocess_page(
+        st.session_state[SESSION_STATE_UPLOADED_DOC_PATH_KEY],
+    )
