@@ -1,3 +1,4 @@
 .DS_STORE
 settings.json
+chroma_db
 **/**.pyc
