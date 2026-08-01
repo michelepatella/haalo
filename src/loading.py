@@ -1,70 +1,54 @@
 """src/loading.py"""
 
-from pathlib import Path
 import tempfile
 import streamlit as st
-
-
-################################################
-# Constants
-################################################
-PAGE_TITLE = "Haalo"
-PAGE_ICON = "💡"
-PAGE_LAYOUT = "wide"
-
-PAGE_HEADER = "Learn faster. Explore deeper."
-PAGE_SUBHEADER = "🚀 Upload an academic document to start chatting!"
-
-UPLOADER_LABEL = ""
-UPLOADER_LABEL_VISIBILITY = "hidden"
-
-DOC_FORMAT = "pdf"
-
-PROCEED_BUTTON_LABEL = "Next ➔"
-
-SESSION_STATE_DOC_PATH_KEY = "doc_path"
-
-COLUMN_LAYOUT_NARROW = [1, 2, 1]
-COLUMN_LAYOUT_WIDE = [3, 2, 3]
-
-LOGO_PATH = Path("assets/images/logo.png")
-STYLE_PATH = Path("assets/styles/loading.css")
-
-
-################################################
-# Streamlit App Configuration
-################################################
-
-# Configuration
-st.set_page_config(
-    page_title=PAGE_TITLE,
-    page_icon=PAGE_ICON,
-    layout=PAGE_LAYOUT,
+from const import (
+    LOGO_PATH,
+    SESSION_STATE_UPLOADED_DOC_PATH_KEY,
+    LOADING_PAGE_HEADER,
+    LOADING_PAGE_SUBHEADER,
+    LOADING_PAGE_COLUMN_LAYOUT_NARROW,
+    LOADING_PAGE_COLUMN_LAYOUT_WIDE,
+    LOADING_PAGE_FILE_UPLOADER_LABEL,
+    LOADING_PAGE_FILE_UPLOADER_LABEL_VISIBILITY,
+    LOADING_PAGE_UPLOADED_DOC_FORMAT,
+    LOADING_PAGE_PROCEED_BUTTON_LABEL,
+    LOADING_PAGE_STYLE_PATH,
 )
 
-# Logo
-_, col_img, _ = st.columns(COLUMN_LAYOUT_WIDE)
-with col_img:
-    st.image(LOGO_PATH)
 
-# Header and subheader
-st.markdown(
-    f"<h2 align='center'>{PAGE_HEADER}</h2>",
-    unsafe_allow_html=True,
-)
-st.markdown(
-    f"<p align='center'>{PAGE_SUBHEADER}</p>",
-    unsafe_allow_html=True,
-)
+def render_loading_page() -> None:
+    """Renders the loading page for the Streamlit app.
 
-# Custom CSS
-with open(STYLE_PATH, "r") as f:
-    css = f.read()
+    This function displays the logo, header, and subheader, and applies 
+    custom CSS styling to the loading page.
 
-st.markdown(
-    f"""<style>{css}</style>""",
-    unsafe_allow_html=True,
-)
+    Returns:
+        None
+    """
+    # Logo
+    _, col_img, _ = st.columns(LOADING_PAGE_COLUMN_LAYOUT_WIDE)
+    with col_img:
+        st.image(LOGO_PATH)
+
+    # Header and subheader
+    st.markdown(
+        f"<h2 align='center'>{LOADING_PAGE_HEADER}</h2>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        f"<p align='center'>{LOADING_PAGE_SUBHEADER}</p>",
+        unsafe_allow_html=True,
+    )
+
+    # Custom CSS
+    with open(LOADING_PAGE_STYLE_PATH, "r") as f:
+        css = f.read()
+
+    st.markdown(
+        f"""<style>{css}</style>""",
+        unsafe_allow_html=True,
+    )
 
 
 def _save_file_to_temp(
@@ -84,7 +68,7 @@ def _save_file_to_temp(
             The absolute path to the saved temporary file.
     """
     with tempfile.NamedTemporaryFile(
-        delete=False, suffix=f".{DOC_FORMAT}"
+        delete=False, suffix=f".{LOADING_PAGE_UPLOADED_DOC_FORMAT}"
     ) as temp_file:
         temp_file.write(uploaded_file.read())
         return temp_file.name
@@ -102,16 +86,16 @@ def load_academic_document() -> str | None:
             The path to the loaded document if successful, or None if no
             file was uploaded.
     """
-    _, col2, _ = st.columns(COLUMN_LAYOUT_NARROW)
+    _, col2, _ = st.columns(LOADING_PAGE_COLUMN_LAYOUT_NARROW)
     with col2:
         # File uploader
         uploaded_file = st.file_uploader(
-            UPLOADER_LABEL,
-            type=DOC_FORMAT,
-            label_visibility=UPLOADER_LABEL_VISIBILITY,
+            LOADING_PAGE_FILE_UPLOADER_LABEL,
+            type=LOADING_PAGE_UPLOADED_DOC_FORMAT,
+            label_visibility=LOADING_PAGE_FILE_UPLOADER_LABEL_VISIBILITY,
         )
 
-        # If a file is uploaded, save it to a temporary 
+        # If a file is uploaded, save it to a temporary
         # file and return the path
         if uploaded_file is not None:
             return _save_file_to_temp(uploaded_file)
@@ -120,12 +104,12 @@ def load_academic_document() -> str | None:
 
 
 # Load the academic document
-doc_path = load_academic_document()
+uploaded_doc_path = load_academic_document()
 
 # If a document is loaded, display a button to proceed
-if doc_path is not None:
-    _, col_btn, _ = st.columns(COLUMN_LAYOUT_NARROW)
+if uploaded_doc_path is not None:
+    _, col_btn, _ = st.columns(LOADING_PAGE_COLUMN_LAYOUT_NARROW)
     with col_btn:
-        if st.button(PROCEED_BUTTON_LABEL):
-            st.session_state[SESSION_STATE_DOC_PATH_KEY] = doc_path
+        if st.button(LOADING_PAGE_PROCEED_BUTTON_LABEL):
+            st.session_state[SESSION_STATE_UPLOADED_DOC_PATH_KEY] = uploaded_doc_path
             st.rerun()
