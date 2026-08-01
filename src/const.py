@@ -45,7 +45,7 @@ EMBEDDING_MODEL_NAME = "BAAI/bge-small-en-v1.5"
 # Vector Store
 #########################################################################################
 VECTOR_STORE_COLLECTION_NAME = "haalo_collection"
-VECTOR_STORE_PERSIST_DIR = "haalo_db"
+VECTOR_STORE_PERSIST_DIR = "./haalo_db"
 
 #########################################################################################
 # Session State
