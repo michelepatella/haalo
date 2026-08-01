@@ -52,6 +52,19 @@ def render_upload_page() -> None:
         unsafe_allow_html=True,
     )
 
+    # Upload the academic document
+    uploaded_doc_path = _upload_academic_document()
+
+    # If a document is uploaded, display a button to proceed
+    if uploaded_doc_path is not None:
+        _, col_btn, _ = st.columns(UPLOAD_PAGE_COLUMN_LAYOUT_NARROW)
+        with col_btn:
+            if st.button(UPLOAD_PAGE_PROCEED_BUTTON_LABEL):
+                st.session_state[SESSION_STATE_UPLOADED_DOC_PATH_KEY] = (
+                    uploaded_doc_path
+                )
+                st.rerun()
+
 
 def _save_file_to_temp(
     uploaded_file: st.runtime.uploaded_file_manager.UploadedFile,
@@ -77,7 +90,7 @@ def _save_file_to_temp(
         return temp_file.name
 
 
-def upload_academic_document() -> str | None:
+def _upload_academic_document() -> str | None:
     """Upload an academic document.
 
     This function provides a file uploader for users to upload an
@@ -103,17 +116,3 @@ def upload_academic_document() -> str | None:
             return _save_file_to_temp(uploaded_file)
 
     return None
-
-
-# Upload the academic document
-uploaded_doc_path = upload_academic_document()
-
-# If a document is uploaded, display a button to proceed
-if uploaded_doc_path is not None:
-    _, col_btn, _ = st.columns(UPLOAD_PAGE_COLUMN_LAYOUT_NARROW)
-    with col_btn:
-        if st.button(UPLOAD_PAGE_PROCEED_BUTTON_LABEL):
-            st.session_state[SESSION_STATE_UPLOADED_DOC_PATH_KEY] = (
-                uploaded_doc_path
-            )
-            st.rerun()

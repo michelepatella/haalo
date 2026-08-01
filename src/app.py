@@ -1,8 +1,8 @@
 """src/app.py"""
 
-import loading
 import streamlit as st
 
+import upload
 from const import (
     PAGE_ICON,
     PAGE_LAYOUT,
@@ -21,6 +21,6 @@ st.set_page_config(
 if SESSION_STATE_UPLOADED_DOC_PATH_KEY not in st.session_state:
     st.session_state[SESSION_STATE_UPLOADED_DOC_PATH_KEY] = None
 
-# Render the loading page if no document has been uploaded yet
+# Render the upload page if no document has been uploaded yet
 if st.session_state[SESSION_STATE_UPLOADED_DOC_PATH_KEY] is None:
-    loading.render_loading_page()
+    upload.render_upload_page()
