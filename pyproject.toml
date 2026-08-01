@@ -17,7 +17,8 @@ dependencies = [
     "llama-index==0.14.23",
     "llama-index-llms-ollama==0.10.1",
     "llama-index-embeddings-huggingface==0.7.0",
-    "streamlit==1.60.0"
+    "streamlit==1.60.0",
+    "nougat-ocr==0.1.17"
 ]
 
 # Optional dependencies -------------------------------------------------------------------------------------------
