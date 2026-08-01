@@ -22,7 +22,7 @@ dependencies = [
 
 # Optional dependencies -------------------------------------------------------------------------------------------
 [project.optional-dependencies]
-dev = ["ruff==0.16.1", "pre-commit==4.6.1"]
+dev = ["ruff==0.16.1", "pre-commit==4.6.0"]
 
 # Other project settings ------------------------------------------------------------------------------------------
 [project.urls]
