@@ -1,5 +1,6 @@
 """src/loading.py"""
 
+from pathlib import Path
 import tempfile
 import streamlit as st
 
@@ -17,7 +18,7 @@ PAGE_SUBHEADER = "🚀 Upload an academic document to start chatting!"
 UPLOADER_LABEL = ""
 UPLOADER_LABEL_VISIBILITY = "hidden"
 
-DOC_FORMAT = ".pdf"
+DOC_FORMAT = "pdf"
 
 PROCEED_BUTTON_LABEL = "Next ➔"
 
@@ -26,15 +27,15 @@ SESSION_STATE_DOC_PATH_KEY = "doc_path"
 COLUMN_LAYOUT_NARROW = [1, 2, 1]
 COLUMN_LAYOUT_WIDE = [3, 2, 3]
 
-LOGO_PATH = "assets/images/logo.png"
-STYLE_PATH = "assets/styles/loading.css"
+LOGO_PATH = Path("assets/images/logo.png")
+STYLE_PATH = Path("assets/styles/loading.css")
 
 
 ################################################
 # Streamlit App Configuration
 ################################################
 
-# Page Configuration
+# Configuration
 st.set_page_config(
     page_title=PAGE_TITLE,
     page_icon=PAGE_ICON,
@@ -46,7 +47,7 @@ _, col_img, _ = st.columns(COLUMN_LAYOUT_WIDE)
 with col_img:
     st.image(LOGO_PATH)
 
-# Header and Subheader
+# Header and subheader
 st.markdown(
     f"<h2 align='center'>{PAGE_HEADER}</h2>",
     unsafe_allow_html=True,
@@ -83,7 +84,7 @@ def _save_file_to_temp(
             The absolute path to the saved temporary file.
     """
     with tempfile.NamedTemporaryFile(
-        delete=False, suffix=DOC_FORMAT
+        delete=False, suffix=f".{DOC_FORMAT}"
     ) as temp_file:
         temp_file.write(uploaded_file.read())
         return temp_file.name
@@ -110,7 +111,8 @@ def load_academic_document() -> str | None:
             label_visibility=UPLOADER_LABEL_VISIBILITY,
         )
 
-        # If a file is uploaded, save it to a temporary file and return the path
+        # If a file is uploaded, save it to a temporary 
+        # file and return the path
         if uploaded_file is not None:
             return _save_file_to_temp(uploaded_file)
 

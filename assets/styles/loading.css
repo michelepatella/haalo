@@ -23,11 +23,16 @@
     display: none !important;
 }
 
-div[data-testid="stColumn"] [data-testid="stElementContainer"],
-div[data-testid="stColumn"] div.stButton {
+div[data-testid="stColumn"] [data-testid="stElementContainer"] {
     display: flex !important;
     justify-content: center !important;
     width: 100% !important;
+}
+
+div[data-testid="stColumn"] div.stButton {
+    display: flex !important;
+    justify-content: center !important;
+    width: auto !important;
 }
 
 div[data-testid="stColumn"] div.stButton > button {
@@ -37,13 +42,14 @@ div[data-testid="stColumn"] div.stButton > button {
     border: 1px solid #FFFFFF !important;
     border-radius: 10px !important;
     font-weight: bold !important;
-    font-size: 1.1rem !important;
-    padding: 0.6rem 2.5rem !important;
+    font-size: 1rem !important;
+    padding: 0.5rem 1.8rem !important;
     transition: opacity 0.2s ease !important;
     margin: 0 auto !important;
     outline: none !important;
     box-shadow: none !important;
     color: #000000 !important;
+    width: auto !important;
 }
 
 div[data-testid="stColumn"] div.stButton > button p,
