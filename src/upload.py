@@ -101,8 +101,8 @@ def _upload_academic_document() -> str | None:
             The path to the uploaded document if successful, or None if no
             file was uploaded.
     """
-    _, col2, _ = st.columns(UPLOAD_PAGE_COLUMN_LAYOUT_NARROW)
-    with col2:
+    _, col_content, _ = st.columns(UPLOAD_PAGE_COLUMN_LAYOUT_NARROW)
+    with col_content:
         # File uploader
         uploaded_file = st.file_uploader(
             UPLOAD_PAGE_FILE_UPLOADER_LABEL,
