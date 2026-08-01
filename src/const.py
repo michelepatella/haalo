@@ -30,12 +30,25 @@ UPLOAD_PAGE_STYLE_PATH = Path("assets/styles/upload.css")
 #########################################################################################
 # Preprocess Page
 #########################################################################################
+PREPROCESS_PAGE_SPINNER_MESSAGE = "Processing document..."
+
 PREPROCESS_PAGE_COLUMN_LAYOUT_NARROW = [1, 2, 1]
 
 PREPROCESS_PAGE_STYLE_PATH = Path("assets/styles/preprocess.css")
 
 #########################################################################################
+# Embedding
+#########################################################################################
+EMBEDDING_MODEL_NAME = "BAAI/bge-small-en-v1.5"
+
+#########################################################################################
+# Vector Store
+#########################################################################################
+VECTOR_STORE_COLLECTION_NAME = "haalo_collection"
+VECTOR_STORE_PERSIST_DIR = "haalo_db"
+
+#########################################################################################
 # Session State
 #########################################################################################
 SESSION_STATE_UPLOADED_DOC_PATH_KEY = "uploaded_doc_path"
-SESSION_STATE_VECTOR_STORE_KEY = "vector_store"
+SESSION_STATE_INDEX_KEY = "index"

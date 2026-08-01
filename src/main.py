@@ -23,7 +23,7 @@ if SESSION_STATE_UPLOADED_DOC_PATH_KEY not in st.session_state:
     st.session_state[SESSION_STATE_UPLOADED_DOC_PATH_KEY] = None
 
 # Render the upload page if no document has been uploaded yet;
-# otherwise, render the preprocessing page
+# otherwise, render the preprocess page
 if st.session_state[SESSION_STATE_UPLOADED_DOC_PATH_KEY] is None:
     upload.render_upload_page()
 else:
