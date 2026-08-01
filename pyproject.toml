@@ -14,11 +14,8 @@ requires-python = "==3.14.6"
 
 # Required dependencies -------------------------------------------------------------------------------------------
 dependencies = [
-    "llama-index==0.14.23",
-    "llama-index-llms-ollama==0.10.1",
-    "llama-index-embeddings-huggingface==0.7.0",
     "streamlit==1.60.0",
-    "nougat-ocr==0.1.17"
+    "pymupdf4llm==1.28.0"
 ]
 
 # Optional dependencies -------------------------------------------------------------------------------------------
