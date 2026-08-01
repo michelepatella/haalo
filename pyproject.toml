@@ -15,7 +15,11 @@ requires-python = "==3.14.6"
 # Required dependencies -------------------------------------------------------------------------------------------
 dependencies = [
     "streamlit==1.60.0",
-    "pymupdf4llm==1.28.0"
+    "pymupdf4llm==1.28.0",
+    "chromadb==1.5.9",
+    "llama_index==0.14.23",
+    "llama-index-vector-stores-chroma==0.5.5",
+    "llama-index-embeddings-huggingface==0.7.0"
 ]
 
 # Optional dependencies -------------------------------------------------------------------------------------------
