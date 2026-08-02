@@ -94,13 +94,21 @@ def _save_file_to_temp(
     Returns:
         str:
             The absolute path to the saved temporary file.
+
+    Raises:
+        Exception:
+            If there is an error while saving the file to disk.
     """
-    with tempfile.NamedTemporaryFile(
-        delete=False,
-        suffix=f".{UPLOAD_PAGE_UPLOADED_DOC_FORMAT}",
-    ) as temp_file:
-        temp_file.write(uploaded_file.read())
-        return temp_file.name
+    try:
+        with tempfile.NamedTemporaryFile(
+            delete=False,
+            suffix=f".{UPLOAD_PAGE_UPLOADED_DOC_FORMAT}",
+        ) as temp_file:
+            temp_file.write(uploaded_file.read())
+            return temp_file.name
+    except Exception as e:
+        st.error(f"Error saving file to disk: {e}")
+        return None
 
 
 def _upload_academic_document() -> str | None:
