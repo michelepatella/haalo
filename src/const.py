@@ -28,7 +28,7 @@ UPLOAD_PAGE_UPLOADED_DOC_FORMAT = "pdf"
 UPLOAD_PAGE_PROCEED_BUTTON_LABEL = "Next ➔"
 
 UPLOAD_PAGE_DISCLAIMER = (
-    "💡 **Haalo** is an AI chatbot designed to help you understand academic documents. "
+    "💡 Haalo is an AI chatbot designed to help you understand academic documents. "
     "Other document types may produce suboptimal results."
 )
 
@@ -47,7 +47,6 @@ PREPROCESS_PAGE_STYLE_PATH = Path("assets/styles/preprocess.css")
 # Vector Store
 #########################################################################################
 VECTOR_STORE_COLLECTION_NAME = "haalo_collection"
-VECTOR_STORE_PERSIST_DIR = "./haalo_db"
 
 #########################################################################################
 # Session State

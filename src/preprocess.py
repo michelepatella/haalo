@@ -9,14 +9,13 @@ from llama_index.core.schema import BaseNode
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.vector_stores.chroma import ChromaVectorStore
 
+from config import EMBEDDING_MODEL_NAME
 from const import (
-    EMBEDDING_MODEL_NAME,
     PREPROCESS_PAGE_COLUMN_LAYOUT_NARROW,
     PREPROCESS_PAGE_SPINNER_MESSAGE,
     PREPROCESS_PAGE_STYLE_PATH,
     SESSION_STATE_INDEX_KEY,
     VECTOR_STORE_COLLECTION_NAME,
-    VECTOR_STORE_PERSIST_DIR,
 )
 
 
@@ -100,11 +99,10 @@ def _create_and_store_embeddings(
     nodes: list[BaseNode],
     embed_model_name: str,
     collection_name: str,
-    persist_dir: str,
 ) -> VectorStoreIndex:
     """Creates embeddings for the given nodes and stores them in a vector database.
 
-    This function initializes an embedding model, creates a persistent ChromaDB client,
+    This function initializes an embedding model, creates a ChromaDB client,
     and stores the embeddings of the given nodes in a ChromaDB collection.
 
     Args:
@@ -114,8 +112,6 @@ def _create_and_store_embeddings(
             The name of the embedding model to be used for creating embeddings.
         collection_name (str):
             The name of the ChromaDB collection to store the embeddings.
-        persist_dir (str):
-            The directory where the ChromaDB database will be persisted.
 
     Returns:
         VectorStoreIndex:
@@ -124,8 +120,8 @@ def _create_and_store_embeddings(
     # Initialize the embedding model
     embed_model = HuggingFaceEmbedding(model_name=embed_model_name)
 
-    # Initialize a persistent ChromaDB client
-    db_client = chromadb.PersistentClient(path=persist_dir)
+    # Initialize a ChromaDB client
+    db_client = chromadb.Client()
 
     # Create or get the ChromaDB collection
     chroma_collection = db_client.get_or_create_collection(
@@ -177,7 +173,6 @@ def _run_preprocess_pipeline(uploaded_doc_path: str) -> VectorStoreIndex:
         chunks,
         EMBEDDING_MODEL_NAME,
         VECTOR_STORE_COLLECTION_NAME,
-        VECTOR_STORE_PERSIST_DIR,
     )
 
     return index

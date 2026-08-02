@@ -66,9 +66,17 @@ def render_upload_page() -> None:
                 )
                 st.rerun()
 
+    # Disclaimer
     _, col_disclaimer, _ = st.columns(UPLOAD_PAGE_COLUMN_LAYOUT_NARROW)
     with col_disclaimer:
-        st.caption(UPLOAD_PAGE_DISCLAIMER, text_alignment="center")
+        st.markdown(
+            f"""
+            <sub style="display: block; text-align: center;">
+                {UPLOAD_PAGE_DISCLAIMER}
+            </sub>
+            """,
+            unsafe_allow_html=True,
+        )
 
 
 def _save_file_to_temp(
