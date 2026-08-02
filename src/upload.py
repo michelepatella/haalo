@@ -81,7 +81,7 @@ def render_upload_page() -> None:
 
 def _save_file_to_temp(
     uploaded_file: st.runtime.uploaded_file_manager.UploadedFile,
-) -> str:
+) -> str | None:
     """Save an uploaded file to a temporary location on disk.
 
     This function takes a Streamlit UploadedFile object, reads its content,
@@ -92,12 +92,8 @@ def _save_file_to_temp(
             The Streamlit UploadedFile object.
 
     Returns:
-        str:
+        str | None:
             The absolute path to the saved temporary file.
-
-    Raises:
-        Exception:
-            If there is an error while saving the file to disk.
     """
     try:
         with tempfile.NamedTemporaryFile(
@@ -106,8 +102,8 @@ def _save_file_to_temp(
         ) as temp_file:
             temp_file.write(uploaded_file.read())
             return temp_file.name
-    except Exception as e:
-        st.error(f"Error saving file to disk: {e}")
+    except Exception:
+        st.error("Error saving file to disk!")
         return None
 
 
@@ -119,8 +115,7 @@ def _upload_academic_document() -> str | None:
 
     Returns:
         str | None:
-            The path to the uploaded document if successful, or None if no
-            file was uploaded.
+            The path to the uploaded document if successful.
     """
     _, col_content, _ = st.columns(UPLOAD_PAGE_COLUMN_LAYOUT_NARROW)
     with col_content:

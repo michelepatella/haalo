@@ -1,5 +1,7 @@
 """src/preprocess.py"""
 
+import os
+
 import chromadb
 import pymupdf4llm
 import streamlit as st
@@ -41,17 +43,22 @@ def render_preprocess_page(uploaded_doc_path: str) -> None:
         unsafe_allow_html=True,
     )
 
-    # Run preprocess pipeline and save the resulting
-    # index in session state
     _, col_content, _ = st.columns(PREPROCESS_PAGE_COLUMN_LAYOUT_NARROW)
     with col_content, st.spinner(PREPROCESS_PAGE_SPINNER_MESSAGE):
-        index = _run_preprocess_pipeline(uploaded_doc_path)
-        if index is not None:
-            st.session_state[SESSION_STATE_INDEX_KEY] = index
-            st.rerun()
+        try:
+            # Run preprocess pipeline and save the resulting
+            # index in session state
+            index = _run_preprocess_pipeline(uploaded_doc_path)
+            if index is not None:
+                st.session_state[SESSION_STATE_INDEX_KEY] = index
+                st.rerun()
+        finally:
+            # Clean up the uploaded document
+            if os.path.exists(uploaded_doc_path):
+                os.remove(uploaded_doc_path)
 
 
-def _pdf_to_md(pdf_path: str) -> str:
+def _pdf_to_md(pdf_path: str) -> str | None:
     """Converts a PDF document to Markdown.
 
     This function converts a PDF document to Markdown using
@@ -62,14 +69,18 @@ def _pdf_to_md(pdf_path: str) -> str:
             The absolute path to the PDF document.
 
     Returns:
-        str:
+        str | None:
             The Markdown content extracted from the PDF document.
     """
-    md_text = pymupdf4llm.to_markdown(pdf_path)
-    return md_text
+    try:
+        md_text = pymupdf4llm.to_markdown(pdf_path)
+        return md_text
+    except Exception:
+        st.error("Error converting PDF to Markdown!")
+        return None
 
 
-def _chunk_md(md_text: str) -> list[dict]:
+def _chunk_md(md_text: str) -> list[dict] | None:
     """Splits Markdown text into chunks.
 
     This function takes Markdown text and splits it into chunks
@@ -80,26 +91,30 @@ def _chunk_md(md_text: str) -> list[dict]:
             The Markdown text to be chunked.
 
     Returns:
-        list[dict]:
+        list[dict] | None:
             List of chunks.
     """
-    # Create a Document object from the Markdown text
-    doc = Document(text=md_text)
+    try:
+        # Create a Document object from the Markdown text
+        doc = Document(text=md_text)
 
-    # Use the MarkdownNodeParser to split the
-    # document into nodes (chunks)
-    parser = MarkdownNodeParser()
+        # Use the MarkdownNodeParser to split the
+        # document into nodes (chunks)
+        parser = MarkdownNodeParser()
 
-    # Get nodes (chunks) from the document and return them
-    nodes = parser.get_nodes_from_documents([doc])
-    return nodes
+        # Get nodes (chunks) from the document and return them
+        nodes = parser.get_nodes_from_documents([doc])
+        return nodes
+    except Exception:
+        st.error("Error chunking Markdown document!")
+        return None
 
 
 def _create_and_store_embeddings(
     nodes: list[BaseNode],
     embed_model_name: str,
     collection_name: str,
-) -> VectorStoreIndex:
+) -> VectorStoreIndex | None:
     """Creates embeddings for the given nodes and stores them in a vector database.
 
     This function initializes an embedding model, creates a ChromaDB client,
@@ -114,37 +129,45 @@ def _create_and_store_embeddings(
             The name of the ChromaDB collection to store the embeddings.
 
     Returns:
-        VectorStoreIndex:
+        VectorStoreIndex | None:
             The resulting vector database instance.
     """
-    # Initialize the embedding model
-    embed_model = HuggingFaceEmbedding(model_name=embed_model_name)
+    try:
+        # Initialize the embedding model
+        embed_model = HuggingFaceEmbedding(model_name=embed_model_name)
 
-    # Initialize a ChromaDB client
-    db_client = chromadb.Client()
+        # Initialize a ChromaDB client
+        db_client = chromadb.Client()
 
-    # Create or get the ChromaDB collection
-    chroma_collection = db_client.get_or_create_collection(
-        name=collection_name,
-    )
+        # Create or get the ChromaDB collection
+        chroma_collection = db_client.get_or_create_collection(
+            name=collection_name,
+        )
 
-    # Create a ChromaVectorStore using the collection
-    vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
+        # Create a ChromaVectorStore using the collection
+        vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
 
-    # Create a StorageContext using the vector store
-    storage_context = StorageContext.from_defaults(vector_store=vector_store)
+        # Create a StorageContext using the vector store
+        storage_context = StorageContext.from_defaults(
+            vector_store=vector_store,
+        )
 
-    # Create a VectorStoreIndex using the nodes, storage context, and embedding model
-    # and return it
-    index = VectorStoreIndex(
-        nodes=nodes,
-        storage_context=storage_context,
-        embed_model=embed_model,
-    )
-    return index
+        # Create a VectorStoreIndex using the nodes, storage context, and embedding model
+        # and return it
+        index = VectorStoreIndex(
+            nodes=nodes,
+            storage_context=storage_context,
+            embed_model=embed_model,
+        )
+        return index
+    except Exception:
+        st.error("Error creating and storing embeddings!")
+        return None
 
 
-def _run_preprocess_pipeline(uploaded_doc_path: str) -> VectorStoreIndex:
+def _run_preprocess_pipeline(
+    uploaded_doc_path: str,
+) -> VectorStoreIndex | None:
     """Executes the complete preprocess pipeline.
 
     This function orchestrates the entire preprocess pipeline:
@@ -158,21 +181,25 @@ def _run_preprocess_pipeline(uploaded_doc_path: str) -> VectorStoreIndex:
             The absolute path to the uploaded document.
 
     Returns:
-        VectorStoreIndex:
+        VectorStoreIndex | None:
             The resulting vector database instance.
     """
     # 1. Converts the PDF document to Markdown
     md_content = _pdf_to_md(uploaded_doc_path)
 
     # 2. Chunks the Markdown document into sections
-    chunks = _chunk_md(md_content)
+    if md_content is not None:
+        chunks = _chunk_md(md_content)
 
     # 3. Computes embeddings for each chunk &
     # 4. Stores the embeddings in a vector database
-    index = _create_and_store_embeddings(
-        chunks,
-        EMBEDDING_MODEL_NAME,
-        VECTOR_STORE_COLLECTION_NAME,
-    )
+    if md_content is not None:
+        if chunks is not None:
+            index = _create_and_store_embeddings(
+                chunks,
+                EMBEDDING_MODEL_NAME,
+                VECTOR_STORE_COLLECTION_NAME,
+            )
+            return index
 
-    return index
+    return None
