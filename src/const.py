@@ -25,6 +25,11 @@ UPLOAD_PAGE_UPLOADED_DOC_FORMAT = "pdf"
 
 UPLOAD_PAGE_PROCEED_BUTTON_LABEL = "Next ➔"
 
+UPLOAD_PAGE_DISCLAIMER = (
+    "💡 **Haalo** is an AI chatbot designed to help you understand academic documents. "
+    "Other document types may produce suboptimal results."
+)
+
 UPLOAD_PAGE_STYLE_PATH = Path("assets/styles/upload.css")
 
 #########################################################################################

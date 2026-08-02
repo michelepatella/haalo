@@ -9,6 +9,7 @@ from const import (
     SESSION_STATE_UPLOADED_DOC_PATH_KEY,
     UPLOAD_PAGE_COLUMN_LAYOUT_NARROW,
     UPLOAD_PAGE_COLUMN_LAYOUT_WIDE,
+    UPLOAD_PAGE_DISCLAIMER,
     UPLOAD_PAGE_FILE_UPLOADER_LABEL,
     UPLOAD_PAGE_FILE_UPLOADER_LABEL_VISIBILITY,
     UPLOAD_PAGE_HEADER,
@@ -64,6 +65,10 @@ def render_upload_page() -> None:
                     uploaded_doc_path
                 )
                 st.rerun()
+
+    _, col_disclaimer, _ = st.columns(UPLOAD_PAGE_COLUMN_LAYOUT_NARROW)
+    with col_disclaimer:
+        st.caption(UPLOAD_PAGE_DISCLAIMER, text_alignment="center")
 
 
 def _save_file_to_temp(
