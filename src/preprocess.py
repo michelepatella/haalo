@@ -49,6 +49,7 @@ def render_preprocess_page(uploaded_doc_path: str) -> None:
         index = _run_preprocess_pipeline(uploaded_doc_path)
         if index is not None:
             st.session_state[SESSION_STATE_INDEX_KEY] = index
+            st.rerun()
 
 
 def _pdf_to_md(pdf_path: str) -> str:
