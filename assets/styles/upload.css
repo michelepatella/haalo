@@ -64,3 +64,11 @@ div[data-testid="stColumn"] div.stButton > button:hover {
     background-color: #FFFFFF !important;
     color: #000000 !important;
 }
+
+[data-testid="stFileUploader"] section {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+}
