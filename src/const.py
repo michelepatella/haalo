@@ -1,3 +1,5 @@
+"""src/const.py"""
+
 from pathlib import Path
 
 ########################################################################################
@@ -40,11 +42,6 @@ PREPROCESS_PAGE_SPINNER_MESSAGE = "Processing document..."
 PREPROCESS_PAGE_COLUMN_LAYOUT_NARROW = [1, 2, 1]
 
 PREPROCESS_PAGE_STYLE_PATH = Path("assets/styles/preprocess.css")
-
-#########################################################################################
-# Embedding
-#########################################################################################
-EMBEDDING_MODEL_NAME = "BAAI/bge-small-en-v1.5"
 
 #########################################################################################
 # Vector Store

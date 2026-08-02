@@ -1,4 +1,4 @@
-"""src/main.py"""
+"""src/app.py"""
 
 import streamlit as st
 
