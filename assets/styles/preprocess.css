@@ -1,0 +1,24 @@
+div[data-testid="stMainBlockContainer"] > div:not(:has(div[data-testid="stSpinner"])) {
+    display: none !important;
+}
+
+div[data-testid="stSpinner"] {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(14, 17, 22);
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+div[data-testid="stSpinner"] > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
