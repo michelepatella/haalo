@@ -54,17 +54,19 @@ def render_upload_page() -> None:
     )
 
     # Upload the academic document
-    uploaded_doc_path = _upload_academic_document()
+    uploaded_file = _upload_academic_document()
 
     # If a document is uploaded, display a button to proceed
-    if uploaded_doc_path is not None:
+    if uploaded_file is not None:
         _, col_btn, _ = st.columns(UPLOAD_PAGE_COLUMN_LAYOUT_NARROW)
         with col_btn:
             if st.button(UPLOAD_PAGE_PROCEED_BUTTON_LABEL):
-                st.session_state[SESSION_STATE_UPLOADED_DOC_PATH_KEY] = (
-                    uploaded_doc_path
-                )
-                st.rerun()
+                uploaded_doc_path = _save_file_to_temp(uploaded_file)
+                if uploaded_doc_path is not None:
+                    st.session_state[SESSION_STATE_UPLOADED_DOC_PATH_KEY] = (
+                        uploaded_doc_path
+                    )
+                    st.rerun()
 
     # Disclaimer
     _, col_disclaimer, _ = st.columns(UPLOAD_PAGE_COLUMN_LAYOUT_NARROW)
@@ -107,15 +109,17 @@ def _save_file_to_temp(
         return None
 
 
-def _upload_academic_document() -> str | None:
+def _upload_academic_document() -> (
+    st.runtime.uploaded_file_manager.UploadedFile | None
+):
     """Upload an academic document.
 
     This function provides a file uploader for users to upload an
     academic document.
 
     Returns:
-        str | None:
-            The path to the uploaded document if successful.
+        st.runtime.uploaded_file_manager.UploadedFile | None:
+            The uploaded file object if successful.
     """
     _, col_content, _ = st.columns(UPLOAD_PAGE_COLUMN_LAYOUT_NARROW)
     with col_content:
@@ -126,9 +130,8 @@ def _upload_academic_document() -> str | None:
             label_visibility=UPLOAD_PAGE_FILE_UPLOADER_LABEL_VISIBILITY,
         )
 
-        # If a file is uploaded, save it to a temporary
-        # file and return the path
+        # If a file is uploaded, return the uploaded file object
         if uploaded_file is not None:
-            return _save_file_to_temp(uploaded_file)
+            return uploaded_file
 
     return None
