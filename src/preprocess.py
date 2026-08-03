@@ -18,19 +18,16 @@ from const import (
     PREPROCESS_PAGE_SPINNER_MESSAGE,
     PREPROCESS_PAGE_STYLE_PATH,
     SESSION_STATE_INDEX_KEY,
+    SESSION_STATE_UPLOADED_DOC_PATH_KEY,
     VECTOR_STORE_COLLECTION_NAME,
 )
 
 
-def render_preprocess_page(uploaded_doc_path: str) -> None:
+def render_preprocess_page() -> None:
     """Render the preprocess page for the Streamlit app.
 
     This function applies custom CSS styling to the preprocess page
     and runs the preprocess pipeline on the uploaded document.
-
-    Args:
-        uploaded_doc_path (str):
-            The absolute path to the uploaded document.
 
     Returns:
         None
@@ -45,6 +42,7 @@ def render_preprocess_page(uploaded_doc_path: str) -> None:
     )
 
     _, col_content, _ = st.columns(PREPROCESS_PAGE_COLUMN_LAYOUT_NARROW)
+    uploaded_doc_path = st.session_state[SESSION_STATE_UPLOADED_DOC_PATH_KEY]
     with col_content, st.spinner(PREPROCESS_PAGE_SPINNER_MESSAGE):
         try:
             # Run preprocess pipeline and save the resulting
