@@ -32,7 +32,9 @@ UPLOAD_PAGE_DISCLAIMER = (
     "Other document types may produce suboptimal results."
 )
 
-UPLOAD_PAGE_ERROR_MESSAGE = "Something went wrong while uploading your file."
+UPLOAD_PAGE_ERROR_MESSAGE = (
+    "Something went wrong while uploading your document."
+)
 
 UPLOAD_PAGE_STYLE_PATH = Path("assets/styles/upload.css")
 
@@ -42,6 +44,10 @@ UPLOAD_PAGE_STYLE_PATH = Path("assets/styles/upload.css")
 PREPROCESS_PAGE_SPINNER_MESSAGE = "Processing document..."
 
 PREPROCESS_PAGE_COLUMN_LAYOUT_NARROW = [1, 2, 1]
+
+PREPROCESS_PAGE_ERROR_MESSAGE = (
+    "Something went wrong while processing your document."
+)
 
 PREPROCESS_PAGE_STYLE_PATH = Path("assets/styles/preprocess.css")
 

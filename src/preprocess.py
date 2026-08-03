@@ -14,6 +14,7 @@ from llama_index.vector_stores.chroma import ChromaVectorStore
 from config import EMBEDDING_MODEL_NAME
 from const import (
     PREPROCESS_PAGE_COLUMN_LAYOUT_NARROW,
+    PREPROCESS_PAGE_ERROR_MESSAGE,
     PREPROCESS_PAGE_SPINNER_MESSAGE,
     PREPROCESS_PAGE_STYLE_PATH,
     SESSION_STATE_INDEX_KEY,
@@ -52,6 +53,8 @@ def render_preprocess_page(uploaded_doc_path: str) -> None:
             if index is not None:
                 st.session_state[SESSION_STATE_INDEX_KEY] = index
                 st.rerun()
+            else:
+                st.error(PREPROCESS_PAGE_ERROR_MESSAGE)
         finally:
             # Clean up the uploaded document
             if os.path.exists(uploaded_doc_path):
@@ -59,7 +62,7 @@ def render_preprocess_page(uploaded_doc_path: str) -> None:
 
 
 def _pdf_to_md(pdf_path: str) -> str | None:
-    """Converts a PDF document to Markdown.
+    """Convert a PDF document to Markdown.
 
     This function converts a PDF document to Markdown using
     the pymupdf4llm library.
@@ -70,20 +73,19 @@ def _pdf_to_md(pdf_path: str) -> str | None:
 
     Returns:
         str | None:
-            The Markdown content extracted from the PDF document.
+            The Markdown content extracted from the PDF document,
+            or None if failed.
     """
     try:
-        md_text = pymupdf4llm.to_markdown(pdf_path)
-        return md_text
+        return pymupdf4llm.to_markdown(pdf_path)
     except Exception:
-        st.error("Error converting PDF to Markdown!")
         return None
 
 
-def _chunk_md(md_text: str) -> list[dict] | None:
-    """Splits Markdown text into chunks.
+def _chunk_md(md_text: str) -> list[BaseNode] | None:
+    """Split Markdown text into chunks.
 
-    This function takes Markdown text and splits it into chunks
+    This function takes Markdown text and splits it into nodes (chunks)
     based on the document structure.
 
     Args:
@@ -91,8 +93,8 @@ def _chunk_md(md_text: str) -> list[dict] | None:
             The Markdown text to be chunked.
 
     Returns:
-        list[dict] | None:
-            List of chunks.
+        list[BaseNode] | None:
+            List of nodes (chunks), or None if chunking failed.
     """
     try:
         # Create a Document object from the Markdown text
@@ -106,7 +108,6 @@ def _chunk_md(md_text: str) -> list[dict] | None:
         nodes = parser.get_nodes_from_documents([doc])
         return nodes
     except Exception:
-        st.error("Error chunking Markdown document!")
         return None
 
 
@@ -115,7 +116,7 @@ def _create_and_store_embeddings(
     embed_model_name: str,
     collection_name: str,
 ) -> VectorStoreIndex | None:
-    """Creates embeddings for the given nodes and stores them in a vector database.
+    """Create embeddings for the given nodes and store them in a vector database.
 
     This function initializes an embedding model, creates a ChromaDB client,
     and stores the embeddings of the given nodes in a ChromaDB collection.
@@ -124,13 +125,13 @@ def _create_and_store_embeddings(
         nodes (list[BaseNode]):
             List of nodes (chunks) for which embeddings will be created.
         embed_model_name (str):
-            The name of the embedding model to be used for creating embeddings.
+            The name of the embedding model to be used.
         collection_name (str):
-            The name of the ChromaDB collection to store the embeddings.
+            The name of the ChromaDB collection.
 
     Returns:
         VectorStoreIndex | None:
-            The resulting vector database instance.
+            The resulting vector database instance, or None if failed.
     """
     try:
         # Initialize the embedding model
@@ -152,29 +153,27 @@ def _create_and_store_embeddings(
             vector_store=vector_store,
         )
 
-        # Create a VectorStoreIndex using the nodes, storage context, and embedding model
-        # and return it
-        index = VectorStoreIndex(
+        # Create a VectorStoreIndex using the nodes, storage context, and
+        # embedding model and return it
+        return VectorStoreIndex(
             nodes=nodes,
             storage_context=storage_context,
             embed_model=embed_model,
         )
-        return index
     except Exception:
-        st.error("Error creating and storing embeddings!")
         return None
 
 
 def _run_preprocess_pipeline(
     uploaded_doc_path: str,
 ) -> VectorStoreIndex | None:
-    """Executes the complete preprocess pipeline.
+    """Execute the complete preprocess pipeline.
 
     This function orchestrates the entire preprocess pipeline:
-    1. Converts the PDF document to Markdown
-    2. Chunks the Markdown document into sections
-    3. Computes embeddings for each chunk
-    4. Stores the embeddings in a vector database
+    1. Convert the PDF document to Markdown
+    2. Chunk the Markdown document into sections
+    3. Compute embeddings for each chunk
+    4. Store the embeddings in a vector database
 
     Args:
         uploaded_doc_path (str):
@@ -182,24 +181,22 @@ def _run_preprocess_pipeline(
 
     Returns:
         VectorStoreIndex | None:
-            The resulting vector database instance.
+            The resulting vector database instance, or None if any step fails.
     """
-    # 1. Converts the PDF document to Markdown
+    # 1. Convert the PDF document to Markdown
     md_content = _pdf_to_md(uploaded_doc_path)
+    if md_content is None:
+        return None
 
-    # 2. Chunks the Markdown document into sections
-    if md_content is not None:
-        chunks = _chunk_md(md_content)
+    # 2. Chunk the Markdown document into sections
+    chunks = _chunk_md(md_content)
+    if chunks is None:
+        return None
 
-    # 3. Computes embeddings for each chunk &
-    # 4. Stores the embeddings in a vector database
-    if md_content is not None:
-        if chunks is not None:
-            index = _create_and_store_embeddings(
-                chunks,
-                EMBEDDING_MODEL_NAME,
-                VECTOR_STORE_COLLECTION_NAME,
-            )
-            return index
-
-    return None
+    # 3. Compute embeddings for each chunk &
+    # 4. Store the embeddings in a vector database
+    return _create_and_store_embeddings(
+        chunks,
+        EMBEDDING_MODEL_NAME,
+        VECTOR_STORE_COLLECTION_NAME,
+    )
