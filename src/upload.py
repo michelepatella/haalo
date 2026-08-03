@@ -68,7 +68,10 @@ def render_upload_page() -> None:
         _, col_btn, _ = st.columns(UPLOAD_PAGE_COLUMN_LAYOUT_NARROW)
         with col_btn:
             if st.button(UPLOAD_PAGE_PROCEED_BUTTON_LABEL):
-                uploaded_doc_path = _save_file_to_temp(uploaded_file)
+                uploaded_doc_path = _save_file_to_temp(
+                    uploaded_file,
+                    UPLOAD_PAGE_UPLOADED_DOC_FORMAT,
+                )
                 if uploaded_doc_path is not None:
                     st.session_state[SESSION_STATE_UPLOADED_DOC_PATH_KEY] = (
                         uploaded_doc_path
@@ -88,6 +91,7 @@ def render_upload_page() -> None:
 
 def _save_file_to_temp(
     uploaded_file: st.runtime.uploaded_file_manager.UploadedFile,
+    format: str,
 ) -> str | None:
     """Save an uploaded file to a temporary location on disk.
 
@@ -97,6 +101,8 @@ def _save_file_to_temp(
     Args:
         uploaded_file (st.runtime.uploaded_file_manager.UploadedFile):
             The Streamlit UploadedFile object.
+        format (str):
+            The file format (extension) to use for the temporary file.
 
     Returns:
         str | None:
@@ -105,7 +111,7 @@ def _save_file_to_temp(
     try:
         with tempfile.NamedTemporaryFile(
             delete=False,
-            suffix=f".{UPLOAD_PAGE_UPLOADED_DOC_FORMAT}",
+            suffix=f".{format}",
         ) as temp_file:
             temp_file.write(uploaded_file.read())
             return temp_file.name
