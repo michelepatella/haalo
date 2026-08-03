@@ -23,8 +23,8 @@ from const import (
 def render_upload_page() -> None:
     """Render the upload page for the Streamlit app.
 
-    This function displays the logo, header, and subheader, and applies
-    custom CSS styling to the upload page.
+    This function displays the logo, header, subheader, file uploader,
+    and proceed button, applying custom CSS styling to the upload page.
 
     Returns:
         None
@@ -53,8 +53,14 @@ def render_upload_page() -> None:
         unsafe_allow_html=True,
     )
 
-    # Upload the academic document
-    uploaded_file = _upload_academic_document()
+    # File uploader
+    _, col_content, _ = st.columns(UPLOAD_PAGE_COLUMN_LAYOUT_NARROW)
+    with col_content:
+        uploaded_file = st.file_uploader(
+            UPLOAD_PAGE_FILE_UPLOADER_LABEL,
+            type=UPLOAD_PAGE_UPLOADED_DOC_FORMAT,
+            label_visibility=UPLOAD_PAGE_FILE_UPLOADER_LABEL_VISIBILITY,
+        )
 
     # If a document is uploaded, display a button to proceed
     if uploaded_file is not None:
@@ -67,6 +73,8 @@ def render_upload_page() -> None:
                         uploaded_doc_path
                     )
                     st.rerun()
+                else:
+                    st.error("Error saving file to disk!")
 
     # Disclaimer
     _, col_disclaimer, _ = st.columns(UPLOAD_PAGE_COLUMN_LAYOUT_NARROW)
@@ -95,7 +103,7 @@ def _save_file_to_temp(
 
     Returns:
         str | None:
-            The absolute path to the saved temporary file.
+            The absolute path to the saved temporary file, or None if saving failed.
     """
     try:
         with tempfile.NamedTemporaryFile(
@@ -105,33 +113,4 @@ def _save_file_to_temp(
             temp_file.write(uploaded_file.read())
             return temp_file.name
     except Exception:
-        st.error("Error saving file to disk!")
         return None
-
-
-def _upload_academic_document() -> (
-    st.runtime.uploaded_file_manager.UploadedFile | None
-):
-    """Upload an academic document.
-
-    This function provides a file uploader for users to upload an
-    academic document.
-
-    Returns:
-        st.runtime.uploaded_file_manager.UploadedFile | None:
-            The uploaded file object if successful.
-    """
-    _, col_content, _ = st.columns(UPLOAD_PAGE_COLUMN_LAYOUT_NARROW)
-    with col_content:
-        # File uploader
-        uploaded_file = st.file_uploader(
-            UPLOAD_PAGE_FILE_UPLOADER_LABEL,
-            type=UPLOAD_PAGE_UPLOADED_DOC_FORMAT,
-            label_visibility=UPLOAD_PAGE_FILE_UPLOADER_LABEL_VISIBILITY,
-        )
-
-        # If a file is uploaded, return the uploaded file object
-        if uploaded_file is not None:
-            return uploaded_file
-
-    return None
