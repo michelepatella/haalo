@@ -11,7 +11,7 @@ from llama_index.core.schema import BaseNode
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.vector_stores.chroma import ChromaVectorStore
 
-from config import EMBEDDING_MODEL_NAME
+from config import config
 from const import (
     PREPROCESS_PAGE_COLUMN_LAYOUT_NARROW,
     PREPROCESS_PAGE_ERROR_MESSAGE,
@@ -51,7 +51,7 @@ def render_preprocess_page(uploaded_doc_path: str) -> None:
             # index in session state
             index = _run_preprocess_pipeline(
                 uploaded_doc_path,
-                EMBEDDING_MODEL_NAME,
+                config.embedding_model_name,
                 VECTOR_STORE_COLLECTION_NAME,
             )
             if index is not None:
