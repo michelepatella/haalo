@@ -49,7 +49,11 @@ def render_preprocess_page(uploaded_doc_path: str) -> None:
         try:
             # Run preprocess pipeline and save the resulting
             # index in session state
-            index = _run_preprocess_pipeline(uploaded_doc_path)
+            index = _run_preprocess_pipeline(
+                uploaded_doc_path,
+                EMBEDDING_MODEL_NAME,
+                VECTOR_STORE_COLLECTION_NAME,
+            )
             if index is not None:
                 st.session_state[SESSION_STATE_INDEX_KEY] = index
                 st.rerun()
@@ -166,6 +170,8 @@ def _create_and_store_embeddings(
 
 def _run_preprocess_pipeline(
     uploaded_doc_path: str,
+    embed_model_name: str,
+    collection_name: str,
 ) -> VectorStoreIndex | None:
     """Execute the complete preprocess pipeline.
 
@@ -178,6 +184,10 @@ def _run_preprocess_pipeline(
     Args:
         uploaded_doc_path (str):
             The absolute path to the uploaded document.
+        embed_model_name (str):
+            The name of the embedding model to be used.
+        collection_name (str):
+            The name of the vector store collection.
 
     Returns:
         VectorStoreIndex | None:
@@ -197,6 +207,6 @@ def _run_preprocess_pipeline(
     # 4. Store the embeddings in a vector database
     return _create_and_store_embeddings(
         chunks,
-        EMBEDDING_MODEL_NAME,
-        VECTOR_STORE_COLLECTION_NAME,
+        embed_model_name,
+        collection_name,
     )
