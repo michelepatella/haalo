@@ -32,6 +32,8 @@ UPLOAD_PAGE_DISCLAIMER = (
     "Other document types may produce suboptimal results."
 )
 
+UPLOAD_PAGE_ERROR_MESSAGE = "Something went wrong while uploading your file."
+
 UPLOAD_PAGE_STYLE_PATH = Path("assets/styles/upload.css")
 
 #########################################################################################

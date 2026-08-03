@@ -10,6 +10,7 @@ from const import (
     UPLOAD_PAGE_COLUMN_LAYOUT_NARROW,
     UPLOAD_PAGE_COLUMN_LAYOUT_WIDE,
     UPLOAD_PAGE_DISCLAIMER,
+    UPLOAD_PAGE_ERROR_MESSAGE,
     UPLOAD_PAGE_FILE_UPLOADER_LABEL,
     UPLOAD_PAGE_FILE_UPLOADER_LABEL_VISIBILITY,
     UPLOAD_PAGE_HEADER,
@@ -29,6 +30,15 @@ def render_upload_page() -> None:
     Returns:
         None
     """
+    # Custom CSS
+    with open(UPLOAD_PAGE_STYLE_PATH) as f:
+        css = f.read()
+
+    st.markdown(
+        f"""<style>{css}</style>""",
+        unsafe_allow_html=True,
+    )
+
     # Logo
     _, col_img, _ = st.columns(UPLOAD_PAGE_COLUMN_LAYOUT_WIDE)
     with col_img:
@@ -36,20 +46,11 @@ def render_upload_page() -> None:
 
     # Header and subheader
     st.markdown(
-        f"<h2 align='center'>{UPLOAD_PAGE_HEADER}</h2>",
+        f"<h2>{UPLOAD_PAGE_HEADER}</h2>",
         unsafe_allow_html=True,
     )
     st.markdown(
-        f"<p align='center'>{UPLOAD_PAGE_SUBHEADER}</p>",
-        unsafe_allow_html=True,
-    )
-
-    # Custom CSS
-    with open(UPLOAD_PAGE_STYLE_PATH) as f:
-        css = f.read()
-
-    st.markdown(
-        f"""<style>{css}</style>""",
+        f"<p>{UPLOAD_PAGE_SUBHEADER}</p>",
         unsafe_allow_html=True,
     )
 
@@ -74,17 +75,13 @@ def render_upload_page() -> None:
                     )
                     st.rerun()
                 else:
-                    st.error("Error saving file to disk!")
+                    st.error(UPLOAD_PAGE_ERROR_MESSAGE)
 
     # Disclaimer
     _, col_disclaimer, _ = st.columns(UPLOAD_PAGE_COLUMN_LAYOUT_NARROW)
     with col_disclaimer:
         st.markdown(
-            f"""
-            <sub style="display: block; text-align: center;">
-                {UPLOAD_PAGE_DISCLAIMER}
-            </sub>
-            """,
+            f"""<sub>{UPLOAD_PAGE_DISCLAIMER}</sub>""",
             unsafe_allow_html=True,
         )
 

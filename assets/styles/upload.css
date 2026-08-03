@@ -72,3 +72,16 @@ div[data-testid="stColumn"] div.stButton > button:hover {
     align-items: center !important;
     text-align: center !important;
 }
+
+h2 {
+    text-align: center;
+}
+
+p {
+    text-align: center;
+}
+
+sub {
+    display: block;
+    text-align: center;
+}
