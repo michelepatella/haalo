@@ -6,7 +6,7 @@ import chromadb
 import pymupdf4llm
 import streamlit as st
 from llama_index.core import Document, StorageContext, VectorStoreIndex
-from llama_index.core.node_parser import MarkdownNodeParser
+from llama_index.core.node_parser import MarkdownNodeParser, SentenceSplitter
 from llama_index.core.schema import BaseNode
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.vector_stores.chroma import ChromaVectorStore
@@ -51,6 +51,8 @@ def render_preprocess_page(uploaded_doc_path: str) -> None:
             # index in session state
             index = _run_preprocess_pipeline(
                 uploaded_doc_path,
+                config.chunk_size,
+                config.chunk_overlap,
                 config.embedding_model_name,
                 VECTOR_STORE_COLLECTION_NAME,
             )
@@ -86,15 +88,23 @@ def _pdf_to_md(pdf_path: str) -> str | None:
         return None
 
 
-def _chunk_md(md_text: str) -> list[BaseNode] | None:
+def _chunk_md(
+    md_text: str,
+    chunk_size: int,
+    chunk_overlap: int,
+) -> list[BaseNode] | None:
     """Split Markdown text into chunks.
 
     This function takes Markdown text and splits it into nodes (chunks)
-    based on the document structure.
+    based on the document structure and token limits.
 
     Args:
         md_text (str):
             The Markdown text to be chunked.
+        chunk_size (int):
+            The size of the chunks to be used for document processing.
+        chunk_overlap (int):
+            The overlap size of the chunks to be used for document processing.
 
     Returns:
         list[BaseNode] | None:
@@ -105,11 +115,17 @@ def _chunk_md(md_text: str) -> list[BaseNode] | None:
         doc = Document(text=md_text)
 
         # Use the MarkdownNodeParser to split the
-        # document into nodes (chunks)
-        parser = MarkdownNodeParser()
+        # document into nodes (chunks) by section
+        md_parser = MarkdownNodeParser()
+        section_nodes = md_parser.get_nodes_from_documents([doc])
 
-        # Get nodes (chunks) from the document and return them
-        nodes = parser.get_nodes_from_documents([doc])
+        # Sub-divide section nodes into token-bounded chunks
+        # and return them
+        sentence_splitter = SentenceSplitter(
+            chunk_size=chunk_size,
+            chunk_overlap=chunk_overlap,
+        )
+        nodes = sentence_splitter.get_nodes_from_documents(section_nodes)
         return nodes
     except Exception:
         return None
@@ -170,6 +186,8 @@ def _create_and_store_embeddings(
 
 def _run_preprocess_pipeline(
     uploaded_doc_path: str,
+    chunk_size: int,
+    chunk_overlap: int,
     embed_model_name: str,
     collection_name: str,
 ) -> VectorStoreIndex | None:
@@ -184,6 +202,10 @@ def _run_preprocess_pipeline(
     Args:
         uploaded_doc_path (str):
             The absolute path to the uploaded document.
+        chunk_size (int):
+            The size of the chunks to be used for document processing.
+        chunk_overlap (int):
+            The overlap size of the chunks to be used for document processing.
         embed_model_name (str):
             The name of the embedding model to be used.
         collection_name (str):
@@ -199,7 +221,7 @@ def _run_preprocess_pipeline(
         return None
 
     # 2. Chunk the Markdown document into sections
-    chunks = _chunk_md(md_content)
+    chunks = _chunk_md(md_content, chunk_size, chunk_overlap)
     if chunks is None:
         return None
 
