@@ -52,6 +52,32 @@ PREPROCESS_PAGE_ERROR_MESSAGE = (
 PREPROCESS_PAGE_STYLE_PATH = Path("assets/styles/preprocess.css")
 
 #########################################################################################
+# Chat Page
+#########################################################################################
+CHAT_PAGE_INPUT_PLACEHOLDER = "Ask something about your document..."
+
+CHAT_PAGE_RESET_CONVERSATION_BUTTON_LABEL = "Reset Conversation"
+CHAT_PAGE_UPLOAD_NEW_DOCUMENT_BUTTON_LABEL = "Upload New Document"
+
+CHAT_PAGE_SOURCES_TITLE = "Sources"
+
+CHAT_PAGE_SPINNER_MESSAGE = "Generating response..."
+
+CHAT_PAGE_MESSAGE_ROLE_KEY = "role"
+CHAT_PAGE_MESSAGE_CONTENT_KEY = "content"
+CHAT_PAGE_MESSAGE_SOURCES_KEY = "sources"
+
+CHAT_PAGE_RESPONSE_SOURCE_NODES_KEY = "source_nodes"
+
+CHAT_PAGE_MESSAGE_ROLE_USER = "user"
+CHAT_PAGE_MESSAGE_ROLE_ASSISTANT = "assistant"
+
+CHAT_PAGE_ASSISTANT_AVATAR = "💡"
+CHAT_PAGE_USER_AVATAR = "👤"
+
+CHAT_PAGE_STYLE_PATH = Path("assets/styles/chat.css")
+
+#########################################################################################
 # Vector Store
 #########################################################################################
 VECTOR_STORE_COLLECTION_NAME = "haalo_collection"
@@ -61,3 +87,5 @@ VECTOR_STORE_COLLECTION_NAME = "haalo_collection"
 #########################################################################################
 SESSION_STATE_UPLOADED_DOC_PATH_KEY = "uploaded_doc_path"
 SESSION_STATE_INDEX_KEY = "index"
+SESSION_STATE_CHAT_ENGINE_KEY = "chat_engine"
+SESSION_STATE_MESSAGE_HISTORY_KEY = "message_history"
