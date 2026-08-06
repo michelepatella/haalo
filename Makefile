@@ -1,6 +1,6 @@
 .PHONY: run
 
-MODEL = qwen2.5:3b
+MODEL := $(shell PYTHONPATH=. python -c "from src.config import config; print(config.llm_model_name)")
 
 run:
 	@bash -c '\
