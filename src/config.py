@@ -1,4 +1,4 @@
-# src/config.py
+"""src/config.py"""
 
 
 class Config:
@@ -27,7 +27,7 @@ class Config:
         self.chunk_overlap: int = 50
         self.embedding_model_name: str = "BAAI/bge-small-en-v1.5"
         self.llm_model_name: str = "qwen2.5:3b"
-        self.chat_mode: str = "condense_plus_context"
+        self.chat_mode: str = "condense_question"
 
 
 config = Config()

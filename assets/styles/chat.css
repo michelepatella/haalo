@@ -1,0 +1,6 @@
+[data-testid="stBaseButton-elementToolbar"] {
+    display: none !important;
+}
+[data-testid="stFileUploaderDropzoneInstructions"] {
+    display: none !important;
+}
