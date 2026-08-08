@@ -23,11 +23,11 @@ class Config:
         Returns:
             None
         """
-        self.chunk_size: int = 512
-        self.chunk_overlap: int = 50
+        self.chunk_size: int = 1024
+        self.chunk_overlap: int = 150
         self.embedding_model_name: str = "BAAI/bge-small-en-v1.5"
         self.llm_model_name: str = "qwen2.5:3b"
-        self.chat_mode: str = "condense_question"
+        self.chat_mode: str = "condense_plus_context"
 
 
 config = Config()
