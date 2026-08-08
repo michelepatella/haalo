@@ -82,6 +82,7 @@ def render_chat_page() -> None:
                 st.session_state[SESSION_STATE_INDEX_KEY],
                 config.llm_model_name,
                 config.chat_mode,
+                config.similarity_top_k,
             )
         )
 
@@ -173,6 +174,7 @@ def _initialize_chat_engine(
     index: VectorStoreIndex,
     model: str,
     chat_mode: str,
+    similarity_top_k: int,
 ) -> BaseChatEngine:
     """Initialize the chat engine.
 
@@ -186,6 +188,8 @@ def _initialize_chat_engine(
             The name of the LLM model (Ollama) to use for generating responses.
         chat_mode (str):
             The mode of the chat engine.
+        similarity_top_k (int):
+            The number of top similar documents to retrieve for context in the chat engine.
 
     Returns:
         BaseChatEngine: The initialized chat engine.
@@ -194,4 +198,5 @@ def _initialize_chat_engine(
     return index.as_chat_engine(
         chat_mode=chat_mode,
         llm=llm,
+        similarity_top_k=similarity_top_k,
     )

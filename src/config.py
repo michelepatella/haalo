@@ -15,6 +15,8 @@ class Config:
             The name of the LLM model to be used.
         chat_mode (str):
             The chat mode to be used in the chat engine.
+        similarity_top_k (int):
+            The number of top similar documents to retrieve for context in the chat engine.
     """
 
     def __init__(self) -> None:
@@ -28,6 +30,7 @@ class Config:
         self.embedding_model_name: str = "BAAI/bge-small-en-v1.5"
         self.llm_model_name: str = "qwen2.5:3b"
         self.chat_mode: str = "condense_plus_context"
+        self.similarity_top_k: int = 5
 
 
 config = Config()
