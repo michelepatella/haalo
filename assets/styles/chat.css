@@ -4,3 +4,32 @@
 [data-testid="stFileUploaderDropzoneInstructions"] {
     display: none !important;
 }
+
+div[data-testid="stChatInput"]:hover,
+div[data-testid="stChatInput"]:focus-within,
+div[data-testid="stChatInput"] > div:hover,
+div[data-testid="stChatInput"] > div:focus-within {
+    border-color: transparent !important;
+    box-shadow: 0 0 0 1px transparent !important;
+}
+
+div[data-testid="stChatInput"] button {
+    background-color: #ffffff !important;
+}
+
+div[data-testid="stChatInput"] button svg {
+    color: #000000 !important;
+    fill: #000000 !important;
+}
+
+div[data-testid="stChatInput"] button:disabled,
+div[data-testid="stChatInput"] button[disabled] {
+    background-color: #555555 !important;
+    opacity: 0.5 !important;
+}
+
+div[data-testid="stChatInput"] button:disabled svg,
+div[data-testid="stChatInput"] button[disabled] svg {
+    color: #aaaaaa !important;
+    fill: #aaaaaa !important;
+}
