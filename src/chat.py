@@ -26,6 +26,7 @@ from const import (
     SESSION_STATE_INDEX_KEY,
     SESSION_STATE_MESSAGE_HISTORY_KEY,
     SESSION_STATE_UPLOADED_DOC_PATH_KEY,
+    SYSTEM_PROMPT,
 )
 
 
@@ -81,6 +82,7 @@ def render_chat_page() -> None:
             _initialize_chat_engine(
                 st.session_state[SESSION_STATE_INDEX_KEY],
                 config.llm_model_name,
+                SYSTEM_PROMPT,
                 config.chat_mode,
                 config.similarity_top_k,
             )
@@ -173,6 +175,7 @@ def render_chat_page() -> None:
 def _initialize_chat_engine(
     index: VectorStoreIndex,
     model: str,
+    system_prompt: str,
     chat_mode: str,
     similarity_top_k: int,
 ) -> BaseChatEngine:
@@ -186,6 +189,8 @@ def _initialize_chat_engine(
             The vector store index containing document embeddings.
         model (str):
             The name of the LLM model (Ollama) to use for generating responses.
+        system_prompt (str):
+            The system prompt to guide the behavior of the chat engine.
         chat_mode (str):
             The mode of the chat engine.
         similarity_top_k (int):
@@ -199,4 +204,5 @@ def _initialize_chat_engine(
         chat_mode=chat_mode,
         llm=llm,
         similarity_top_k=similarity_top_k,
+        system_prompt=system_prompt,
     )
