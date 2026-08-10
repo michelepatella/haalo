@@ -13,10 +13,7 @@ from const import (
     CHAT_PAGE_MESSAGE_ROLE_ASSISTANT,
     CHAT_PAGE_MESSAGE_ROLE_KEY,
     CHAT_PAGE_MESSAGE_ROLE_USER,
-    CHAT_PAGE_MESSAGE_SOURCES_KEY,
     CHAT_PAGE_RESET_CONVERSATION_BUTTON_LABEL,
-    CHAT_PAGE_RESPONSE_SOURCE_NODES_KEY,
-    CHAT_PAGE_SOURCES_TITLE,
     CHAT_PAGE_SPINNER_MESSAGE,
     CHAT_PAGE_STYLE_PATH,
     CHAT_PAGE_UPLOAD_NEW_DOCUMENT_BUTTON_LABEL,
@@ -110,16 +107,6 @@ def render_chat_page() -> None:
             # Message content
             st.markdown(message[CHAT_PAGE_MESSAGE_CONTENT_KEY])
 
-            # Sources if available
-            if message.get(CHAT_PAGE_MESSAGE_SOURCES_KEY):
-                with st.expander(CHAT_PAGE_SOURCES_TITLE):
-                    for i, source in enumerate(
-                        message[CHAT_PAGE_MESSAGE_SOURCES_KEY],
-                    ):
-                        st.caption(source)
-                        if i < len(message[CHAT_PAGE_MESSAGE_SOURCES_KEY]) - 1:
-                            st.divider()
-
     # Chat input
     if prompt := st.chat_input(CHAT_PAGE_INPUT_PLACEHOLDER):
         # User message
@@ -148,26 +135,11 @@ def render_chat_page() -> None:
             )
             st.markdown(response.response)
 
-            # Sources if available
-            sources = []
-            if (
-                hasattr(response, CHAT_PAGE_RESPONSE_SOURCE_NODES_KEY)
-                and response.source_nodes
-            ):
-                with st.expander(CHAT_PAGE_SOURCES_TITLE):
-                    for i, node in enumerate(response.source_nodes):
-                        source_content = node.node.get_content()
-                        st.caption(source_content)
-                        if i < len(response.source_nodes) - 1:
-                            st.divider()
-                        sources.append(source_content)
-
         # Save the assistant response in the message history
         st.session_state[SESSION_STATE_MESSAGE_HISTORY_KEY].append(
             {
                 CHAT_PAGE_MESSAGE_ROLE_KEY: CHAT_PAGE_MESSAGE_ROLE_ASSISTANT,
                 CHAT_PAGE_MESSAGE_CONTENT_KEY: response.response,
-                CHAT_PAGE_MESSAGE_SOURCES_KEY: sources,
             },
         )
 
