@@ -12,6 +12,7 @@
 ├── LICENSE                  <- License defining project usage rights
 ├── Makefile                 <- Automation commands
 ├── PROJECT_STRUCTURE.md     <- Project structure overview (this file)
+├── README.md                <- Project overview
 ├── pyproject.toml           <- Project configuration, dependencies, and build settings
 ├── .gitignore               <- Files/folders ignored by Git
 ├── .pre-commit-config.yaml  <- Pre-commit hooks configuration
