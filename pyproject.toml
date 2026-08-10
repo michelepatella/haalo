@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "haalo"
 version = "0.1.0"
-description = "Multi-turn RAG chatbot for interactive analysis of academic documents."
+description = "Multi-turn RAG chatbot for conversational analysis of academic documents."
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = "==3.14.6"
