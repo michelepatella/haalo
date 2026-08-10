@@ -72,6 +72,13 @@ CHAT_PAGE_USER_AVATAR = "👤"
 
 CHAT_PAGE_STYLE_PATH = Path("assets/styles/chat.css")
 
+CHAT_PAGE_INITIALIZATION_ERROR_MESSAGE = (
+    "Something went wrong while initializing the chat engine."
+)
+CHAT_PAGE_RESPONSE_GENERATION_ERROR_MESSAGE = (
+    "Something went wrong while generating the response."
+)
+
 #########################################################################################
 # Vector Store
 #########################################################################################

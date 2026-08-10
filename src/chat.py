@@ -8,12 +8,14 @@ from llama_index.llms.ollama import Ollama
 from config import config
 from const import (
     CHAT_PAGE_ASSISTANT_AVATAR,
+    CHAT_PAGE_INITIALIZATION_ERROR_MESSAGE,
     CHAT_PAGE_INPUT_PLACEHOLDER,
     CHAT_PAGE_MESSAGE_CONTENT_KEY,
     CHAT_PAGE_MESSAGE_ROLE_ASSISTANT,
     CHAT_PAGE_MESSAGE_ROLE_KEY,
     CHAT_PAGE_MESSAGE_ROLE_USER,
     CHAT_PAGE_RESET_CONVERSATION_BUTTON_LABEL,
+    CHAT_PAGE_RESPONSE_GENERATION_ERROR_MESSAGE,
     CHAT_PAGE_SPINNER_MESSAGE,
     CHAT_PAGE_STYLE_PATH,
     CHAT_PAGE_UPLOAD_NEW_DOCUMENT_BUTTON_LABEL,
@@ -58,7 +60,12 @@ def render_chat_page() -> None:
             use_container_width=True,
         ):
             st.session_state[SESSION_STATE_MESSAGE_HISTORY_KEY] = []
-            st.session_state[SESSION_STATE_CHAT_ENGINE_KEY].reset()
+
+            if SESSION_STATE_CHAT_ENGINE_KEY in st.session_state:
+                try:
+                    st.session_state[SESSION_STATE_CHAT_ENGINE_KEY].reset()
+                except Exception:
+                    del st.session_state[SESSION_STATE_CHAT_ENGINE_KEY]
             st.rerun()
 
         # Upload new document button
@@ -75,15 +82,19 @@ def render_chat_page() -> None:
 
     # Initialize the chat engine
     if SESSION_STATE_CHAT_ENGINE_KEY not in st.session_state:
-        st.session_state[SESSION_STATE_CHAT_ENGINE_KEY] = (
-            _initialize_chat_engine(
-                st.session_state[SESSION_STATE_INDEX_KEY],
-                config.llm_model_name,
-                SYSTEM_PROMPT,
-                config.chat_mode,
-                config.similarity_top_k,
-            )
+        chat_engine = _initialize_chat_engine(
+            st.session_state[SESSION_STATE_INDEX_KEY],
+            config.llm_model_name,
+            SYSTEM_PROMPT,
+            config.chat_mode,
+            config.similarity_top_k,
         )
+
+        if chat_engine is not None:
+            st.session_state[SESSION_STATE_CHAT_ENGINE_KEY] = chat_engine
+        else:
+            st.error(CHAT_PAGE_INITIALIZATION_ERROR_MESSAGE)
+            return
 
     # Initialize the message history
     if SESSION_STATE_MESSAGE_HISTORY_KEY not in st.session_state:
@@ -130,18 +141,24 @@ def render_chat_page() -> None:
             ),
             st.spinner(CHAT_PAGE_SPINNER_MESSAGE),
         ):
-            response = st.session_state[SESSION_STATE_CHAT_ENGINE_KEY].chat(
-                prompt,
-            )
-            st.markdown(response.response)
+            try:
+                response = st.session_state[
+                    SESSION_STATE_CHAT_ENGINE_KEY
+                ].chat(
+                    prompt,
+                )
+                st.markdown(response.response)
 
-        # Save the assistant response in the message history
-        st.session_state[SESSION_STATE_MESSAGE_HISTORY_KEY].append(
-            {
-                CHAT_PAGE_MESSAGE_ROLE_KEY: CHAT_PAGE_MESSAGE_ROLE_ASSISTANT,
-                CHAT_PAGE_MESSAGE_CONTENT_KEY: response.response,
-            },
-        )
+                # Save the assistant response in the message history
+                st.session_state[SESSION_STATE_MESSAGE_HISTORY_KEY].append(
+                    {
+                        CHAT_PAGE_MESSAGE_ROLE_KEY: CHAT_PAGE_MESSAGE_ROLE_ASSISTANT,
+                        CHAT_PAGE_MESSAGE_CONTENT_KEY: response.response,
+                    },
+                )
+            except Exception:
+                st.session_state[SESSION_STATE_MESSAGE_HISTORY_KEY].pop()
+                st.error(CHAT_PAGE_RESPONSE_GENERATION_ERROR_MESSAGE)
 
 
 def _initialize_chat_engine(
@@ -150,7 +167,7 @@ def _initialize_chat_engine(
     system_prompt: str,
     chat_mode: str,
     similarity_top_k: int,
-) -> BaseChatEngine:
+) -> BaseChatEngine | None:
     """Initialize the chat engine.
 
     This function initializes the chat engine using the provided
@@ -169,12 +186,15 @@ def _initialize_chat_engine(
             The number of top similar documents to retrieve for context in the chat engine.
 
     Returns:
-        BaseChatEngine: The initialized chat engine.
+        BaseChatEngine | None: The initialized chat engine, or None if failed.
     """
-    llm = Ollama(model=model)
-    return index.as_chat_engine(
-        chat_mode=chat_mode,
-        llm=llm,
-        similarity_top_k=similarity_top_k,
-        system_prompt=system_prompt,
-    )
+    try:
+        llm = Ollama(model=model)
+        return index.as_chat_engine(
+            chat_mode=chat_mode,
+            llm=llm,
+            similarity_top_k=similarity_top_k,
+            system_prompt=system_prompt,
+        )
+    except Exception:
+        return None
