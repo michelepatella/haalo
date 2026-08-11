@@ -6,18 +6,18 @@ import chat
 import preprocess
 import upload
 from const import (
-    PAGE_ICON,
-    PAGE_LAYOUT,
-    PAGE_TITLE,
+    APP_ICON,
+    APP_LAYOUT,
+    APP_TITLE,
     SESSION_STATE_INDEX_KEY,
     SESSION_STATE_UPLOADED_DOC_PATH_KEY,
 )
 
 # Streamlit app configuration
 st.set_page_config(
-    page_title=PAGE_TITLE,
-    page_icon=PAGE_ICON,
-    layout=PAGE_LAYOUT,
+    page_title=APP_TITLE,
+    page_icon=APP_ICON,
+    layout=APP_LAYOUT,
 )
 
 # Initialize session states

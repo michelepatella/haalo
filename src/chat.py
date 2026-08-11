@@ -7,6 +7,7 @@ from llama_index.llms.ollama import Ollama
 
 from config import config
 from const import (
+    APP_LOGO_PATH,
     CHAT_PAGE_ASSISTANT_AVATAR,
     CHAT_PAGE_INITIALIZATION_ERROR_MESSAGE,
     CHAT_PAGE_INPUT_PLACEHOLDER,
@@ -20,7 +21,6 @@ from const import (
     CHAT_PAGE_STYLE_PATH,
     CHAT_PAGE_UPLOAD_NEW_DOCUMENT_BUTTON_LABEL,
     CHAT_PAGE_USER_AVATAR,
-    LOGO_PATH,
     SESSION_STATE_CHAT_ENGINE_KEY,
     SESSION_STATE_INDEX_KEY,
     SESSION_STATE_MESSAGE_HISTORY_KEY,
@@ -52,7 +52,7 @@ def render_chat_page() -> None:
     # Sidebar
     with st.sidebar:
         # Logo
-        st.image(LOGO_PATH)
+        st.image(APP_LOGO_PATH)
 
         # Reset conversation button
         if st.button(

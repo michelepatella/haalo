@@ -5,7 +5,7 @@ import tempfile
 import streamlit as st
 
 from const import (
-    LOGO_PATH,
+    APP_LOGO_PATH,
     SESSION_STATE_UPLOADED_DOC_PATH_KEY,
     UPLOAD_PAGE_COLUMN_LAYOUT_NARROW,
     UPLOAD_PAGE_COLUMN_LAYOUT_WIDE,
@@ -42,7 +42,7 @@ def render_upload_page() -> None:
     # Logo
     _, col_img, _ = st.columns(UPLOAD_PAGE_COLUMN_LAYOUT_WIDE)
     with col_img:
-        st.image(LOGO_PATH)
+        st.image(APP_LOGO_PATH)
 
     # Header and subheader
     st.markdown(

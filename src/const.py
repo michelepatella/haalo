@@ -3,13 +3,13 @@
 from pathlib import Path
 
 ########################################################################################
-# General
+# App
 ########################################################################################
-LOGO_PATH = Path("assets/images/logo.png")
+APP_TITLE = "Haalo"
+APP_ICON = "💡"
+APP_LAYOUT = "wide"
 
-PAGE_TITLE = "Haalo"
-PAGE_ICON = "💡"
-PAGE_LAYOUT = "wide"
+APP_LOGO_PATH = Path("assets/images/logo.png")
 
 ########################################################################################
 # Upload Page
