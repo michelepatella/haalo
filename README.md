@@ -28,7 +28,6 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
     <li><a href="#license">License</a></li>
   </ol>
 </details>
@@ -73,9 +72,7 @@ cd haalo
 pip install -e .
 ```
 
-<p align="right"><a href="#readme-top">Top ↑</a></p>
-
-## Usage
+### Run
 
 After installation, run the application locally:
 
