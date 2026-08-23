@@ -75,6 +75,14 @@ pip install -e .
 
 ## Usage
 
+After installation, run the application locally:
+
+```sh
+make run
+```
+
+This command starts the Ollama service, downloads the configured LLM if needed, and launches the Streamlit application.
+
 <p align="right"><a href="#readme-top">Top ↑</a></p>
 
 ## License
