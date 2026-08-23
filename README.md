@@ -41,7 +41,12 @@
 
 ### Built With
 
-[![Python](https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org/)  
+[![Python](https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org/)
+[![LlamaIndex](https://img.shields.io/badge/LlamaIndex-2E00F7?style=for-the-badge&logo=llama&logoColor=white)](https://www.llamaindex.ai/)
+[![ChromaDB](https://img.shields.io/badge/ChromaDB-ED6E51?style=for-the-badge&logo=chroma&logoColor=white)](https://www.trychroma.com/products/chromadb)
+[![Ollama](https://img.shields.io/badge/Ollama-FFFFFF?style=for-the-badge&logo=ollama&logoColor=black)](https://ollama.com/)
+[![Hugging Face](https://img.shields.io/badge/Hugging%20Face-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)](https://huggingface.co/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
 
 <p align="right"><a href="#readme-top">Top ↑</a></p>
 
