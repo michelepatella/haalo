@@ -1,8 +1,6 @@
 <br/>
 <div align="center">
     <img width="50%" src="https://github.com/user-attachments/assets/70faf79b-7b84-4450-9a87-abbc2476a07f"/> <br>
-    <em>Multi-turn RAG chatbot for conversational analysis of academic documents.</em>
-  </p>
 
   [![Python](https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org/)
   [![LlamaIndex](https://img.shields.io/badge/LlamaIndex-2E00F7?style=for-the-badge&logo=llama&logoColor=white)](https://www.llamaindex.ai/)
@@ -14,9 +12,25 @@
 
 ---
 
-## About The Project
+## Overview
+
+💡 **Haalo** is a multi-turn RAG chatbot for conversational analysis of academic documents, allowing users to ask questions about uploaded PDFs and receive answers grounded exclusively in the document.
 
 https://github.com/user-attachments/assets/95e59c32-7bc3-471b-8e09-df08de1f47f1
+
+## RAG Pipeline
+
+**`1 • Document Upload`**  
+Users upload an academic document in PDF format.
+
+**`2 • Document Preprocessing`**  
+The uploaded document undergoes a multi-stage preprocessing pipeline:  
+
+> **`2.1 • PDF to Markdown Conversion`**  
+> The PDF is converted to Markdown using the `pymupdf4llm` library to preserve semantic structure and accurately extract content.
+> 
+> **`2.2 • Structure-Aware Chunking`**  
+> The Markdown content is first split by document sections using `MarkdownNodeParser`, then divided into token-bounded chunks using `SentenceSplitter` from `llama_index`.
 
 ## Getting Started
 
@@ -80,5 +94,5 @@ Distributed under the [MIT License](https://github.com/michelepatella/haalo/blob
 ---
 
 <div align="center">
-  <sub>Haalo is powered by AI. It can make mistakes, so please verify important information.</sub>
+  <sub>💡 Haalo is powered by AI. It can make mistakes, so please verify important information.</sub>
 </div>
