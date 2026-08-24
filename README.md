@@ -16,7 +16,7 @@
 
 ## About The Project
 
-https://github.com/user-attachments/assets/827f3f9b-9dff-4d25-93a3-590cc39612e1
+https://github.com/user-attachments/assets/95e59c32-7bc3-471b-8e09-df08de1f47f1
 
 ## Getting Started
 
