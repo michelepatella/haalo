@@ -10,6 +10,18 @@
   [![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
 </div>
 
+<br>
+
+<p><strong>Table of Contents</strong></p>
+
+- [Overview](#overview)
+- [RAG Pipeline](#rag-pipeline)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Run](#run)
+- [License](#license)
+
 ---
 
 ## Overview
@@ -38,6 +50,18 @@ The uploaded document undergoes a multi-stage preprocessing pipeline:
 **↓**  
 **`3 • Conversational Retrieval & Generation`**  
 For each user query, the top-k most relevant document chunks are retrieved from ChromaDB based on semantic similarity and used by a locally hosted LLM to generate document-grounded responses in a multi-turn conversation.
+
+> [!TIP]
+> Customize the RAG pipeline by modifying the following parameters in `src/config.py`:
+>
+> | Parameter              | Default                  |
+> | ---------------------- | ------------------------ |
+> | `chunk_size`           | `1024`                   |
+> | `chunk_overlap`        | `150`                    |
+> | `embedding_model_name` | `BAAI/bge-small-en-v1.5` |
+> | `llm_model_name`       | `qwen2.5:3b`             |
+> | `chat_mode`            | `condense_plus_context`  |
+> | `similarity_top_k`     | `5`                      |
 
 ## Getting Started
 
@@ -80,19 +104,6 @@ make run
 ```
 
 This command starts the Ollama service, downloads the configured LLM if needed, and launches the Streamlit application.
-
-> [!TIP]
-> Customize the RAG pipeline by modifying the following parameters in `src/config.py`:
->
-> | Parameter              | Default                  |
-> | ---------------------- | ------------------------ |
-> | `chunk_size`           |  `1024`                  |
-> | `chunk_overlap`        | `150`                    |
-> | `embedding_model_name` | `BAAI/bge-small-en-v1.5` |
-> | `llm_model_name`       | `qwen2.5:3b`             |
-> | `chat_mode`            | `condense_plus_context`  |
-> | `similarity_top_k`     | `5`                      |
-
 
 ## License
 
