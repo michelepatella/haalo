@@ -21,16 +21,19 @@ https://github.com/user-attachments/assets/95e59c32-7bc3-471b-8e09-df08de1f47f1
 ## RAG Pipeline
 
 **`1 • Document Upload`**  
-Users upload an academic document in PDF format.
-
+Users upload an academic document in PDF format.  
+**↓**  
 **`2 • Document Preprocessing`**  
 The uploaded document undergoes a multi-stage preprocessing pipeline:  
 
 > **`2.1 • PDF to Markdown Conversion`**  
-> The PDF is converted to Markdown using the `pymupdf4llm` library to preserve semantic structure and accurately extract content.
+> The PDF is converted to Markdown to preserve semantic structure and accurately extract content.
 > 
 > **`2.2 • Structure-Aware Chunking`**  
-> The Markdown content is first split by document sections using `MarkdownNodeParser`, then divided into token-bounded chunks using `SentenceSplitter` from `llama_index`.
+> The Markdown content is first split by document sections, then divided into token-bounded chunks.
+>
+> **`2.3 • Embedding & Vector Indexing`**  
+> Each chunk is converted into an embedding and stored in a ChromaDB vector store for similarity search.
 
 ## Getting Started
 
