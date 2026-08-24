@@ -27,7 +27,18 @@ Required version: 3.14.6
 Link: https://www.python.org/downloads/release/python-3146/
 
 > [!WARNING]
-> Compatibility with earlier or later Python versions has not been tested.  
+> Compatibility with earlier or later Python versions has not been tested.
+
+**Git**  
+Required to clone the repository.  
+Link: https://git-scm.com/install/  
+
+**Ollama**  
+Required to run the local LLM.  
+Link: https://ollama.com/download
+
+**Make**  
+Required to run the application using the provided `Makefile`.
 
 ### Installation
 
@@ -48,6 +59,19 @@ make run
 ```
 
 This command starts the Ollama service, downloads the configured LLM if needed, and launches the Streamlit application.
+
+> [!TIP]
+> Customize the RAG pipeline by modifying the following parameters in `src/config.py`:
+>
+> | Parameter              | Default                  |
+> | ---------------------- | ------------------------ |
+> | `chunk_size`           | `1024`                   |
+> | `chunk_overlap`        | `150`                    |
+> | `embedding_model_name` | `BAAI/bge-small-en-v1.5` |
+> | `llm_model_name`       | `qwen2.5:3b`             |
+> | `chat_mode`            | `condense_plus_context`  |
+> | `similarity_top_k`     | `5`                      |
+
 
 ## License
 
