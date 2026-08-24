@@ -28,12 +28,16 @@ The uploaded document undergoes a multi-stage preprocessing pipeline:
 
 > **`2.1 • PDF to Markdown Conversion`**  
 > The PDF is converted to Markdown to preserve semantic structure and accurately extract content.
-> 
+>
 > **`2.2 • Structure-Aware Chunking`**  
 > The Markdown content is first split by document sections, then divided into token-bounded chunks.
 >
 > **`2.3 • Embedding & Vector Indexing`**  
 > Each chunk is converted into an embedding and stored in a ChromaDB vector store for similarity search.
+
+**↓**  
+**`3 • Conversational Retrieval & Generation`**  
+For each user query, the top-k most relevant document chunks are retrieved from ChromaDB based on semantic similarity and used by a locally hosted LLM to generate document-grounded responses in a multi-turn conversation.
 
 ## Getting Started
 
@@ -82,7 +86,7 @@ This command starts the Ollama service, downloads the configured LLM if needed, 
 >
 > | Parameter              | Default                  |
 > | ---------------------- | ------------------------ |
-> | `chunk_size`           | `1024`                   |
+> | `chunk_size`           |  `1024`                  |
 > | `chunk_overlap`        | `150`                    |
 > | `embedding_model_name` | `BAAI/bge-small-en-v1.5` |
 > | `llm_model_name`       | `qwen2.5:3b`             |
