@@ -1,4 +1,7 @@
 .PHONY: run
+.PHONY: benchmark-preprocessing
+
+export PYTHONPATH := .:${CURDIR}/src
 
 MODEL := $(shell PYTHONPATH=. python -c "from src.config import config; print(config.llm_model_name)")
 
@@ -13,3 +16,6 @@ run:
 		echo "💡 Launching Haalo..."; \
 		streamlit run src/app.py; \
 	'
+
+benchmark-preprocessing:
+	@PYTHONPATH=.:src python benchmarks/preprocessing/run_benchmark.py
