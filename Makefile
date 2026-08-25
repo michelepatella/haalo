@@ -18,4 +18,12 @@ run:
 	'
 
 benchmark-preprocessing:
-	@PYTHONPATH=.:src python benchmarks/preprocessing/run_benchmark.py
+	@PYTHONPATH=.:src \
+	HF_HUB_DISABLE_SYMLINKS_WARNING=1 \
+	HF_HUB_DISABLE_IMPLICIT_TOKEN_WARNING=1 \
+	HF_HUB_ENABLE_HF_TRANSFER=0 \
+	HF_HUB_VERBOSITY=error \
+	TRANSFORMERS_VERBOSITY=error \
+	TQDM_DISABLE=1 \
+	PYTHONWARNINGS="ignore" \
+	python benchmarks/preprocessing/run_benchmark.py
