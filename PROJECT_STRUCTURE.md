@@ -9,6 +9,12 @@
 │       ├── chat.css         <- Style for the chat page
 │       ├── preprocess.css   <- Style for the preprocess page
 │       └── upload.css       <- Style for the upload page
+├── benchmarks               <- Performance benchmarking
+│   ├── const.py             <- Constants for benchmarking
+│   ├── pdf_urls.json        <- PDFs to benchmark
+│   └── preprocessing        <- Preprocessing pipeline benchmark
+│       ├── run_benchmark.py <- Script to run the preprocessing benchmark
+│       └── report.json      <- Preprocessing pipeline benchmark report
 ├── LICENSE                  <- License defining project usage rights
 ├── Makefile                 <- Automation commands
 ├── PROJECT_STRUCTURE.md     <- Project structure overview (this file)
