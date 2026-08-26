@@ -23,6 +23,37 @@ from const import (
 )
 
 
+@st.cache_resource
+def _get_embedding_model(embedding_model_name: str) -> HuggingFaceEmbedding:
+    """Get the embedding model.
+
+    This function initializes and returns a HuggingFaceEmbedding model
+    based on the provided model name.
+
+    Args:
+        embedding_model_name (str):
+            The name of the embedding model to be used.
+
+    Returns:
+        HuggingFaceEmbedding:
+            The initialized HuggingFaceEmbedding model instance.
+    """
+    return HuggingFaceEmbedding(model_name=embedding_model_name)
+
+
+@st.cache_resource
+def _get_chroma_client() -> chromadb.Client:
+    """Get the ChromaDB client.
+
+    This function initializes and returns a ChromaDB client instance.
+
+    Returns:
+        chromadb.Client:
+            The initialized ChromaDB client instance.
+    """
+    return chromadb.Client()
+
+
 def render_preprocess_page() -> None:
     """Render the preprocess page for the Streamlit app.
 
@@ -131,7 +162,7 @@ def _chunk_md(
 
 def _create_and_store_embeddings(
     nodes: list[BaseNode],
-    embed_model_name: str,
+    embedding_model_name: str,
     collection_name: str,
 ) -> VectorStoreIndex | None:
     """Create embeddings for the given nodes and store them in a vector database.
@@ -142,7 +173,7 @@ def _create_and_store_embeddings(
     Args:
         nodes (list[BaseNode]):
             List of nodes (chunks) for which embeddings will be created.
-        embed_model_name (str):
+        embedding_model_name (str):
             The name of the embedding model to be used.
         collection_name (str):
             The name of the ChromaDB collection.
@@ -153,10 +184,16 @@ def _create_and_store_embeddings(
     """
     try:
         # Initialize the embedding model
-        embed_model = HuggingFaceEmbedding(model_name=embed_model_name)
+        embedding_model = _get_embedding_model(embedding_model_name)
 
         # Initialize a ChromaDB client
-        db_client = chromadb.Client()
+        db_client = _get_chroma_client()
+
+        # Delete the collection if it already exists
+        try:
+            db_client.delete_collection(name=collection_name)
+        except Exception:
+            pass
 
         # Create or get the ChromaDB collection
         chroma_collection = db_client.get_or_create_collection(
@@ -176,7 +213,7 @@ def _create_and_store_embeddings(
         return VectorStoreIndex(
             nodes=nodes,
             storage_context=storage_context,
-            embed_model=embed_model,
+            embed_model=embedding_model,
         )
     except Exception:
         return None
@@ -186,7 +223,7 @@ def _run_preprocess_pipeline(
     uploaded_doc_path: str,
     chunk_size: int,
     chunk_overlap: int,
-    embed_model_name: str,
+    embedding_model_name: str,
     collection_name: str,
 ) -> VectorStoreIndex | None:
     """Execute the complete preprocess pipeline.
@@ -204,7 +241,7 @@ def _run_preprocess_pipeline(
             The size of the chunks to be used for document processing.
         chunk_overlap (int):
             The overlap size of the chunks to be used for document processing.
-        embed_model_name (str):
+        embedding_model_name (str):
             The name of the embedding model to be used.
         collection_name (str):
             The name of the vector store collection.
@@ -227,6 +264,6 @@ def _run_preprocess_pipeline(
     # 4. Store the embeddings in a vector database
     return _create_and_store_embeddings(
         chunks,
-        embed_model_name,
+        embedding_model_name,
         collection_name,
     )
