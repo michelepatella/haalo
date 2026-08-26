@@ -1,12 +1,12 @@
 <br/>
 <div align="center">
     <img width="50%" src="https://github.com/user-attachments/assets/70faf79b-7b84-4450-9a87-abbc2476a07f"/> <br>
-
+    
   [![Python](https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org/)
   [![LlamaIndex](https://img.shields.io/badge/LlamaIndex-2E00F7?style=for-the-badge&logo=llama&logoColor=white)](https://www.llamaindex.ai/)
   [![ChromaDB](https://img.shields.io/badge/ChromaDB-ED6E51?style=for-the-badge&logo=chroma&logoColor=white)](https://www.trychroma.com/products/chromadb)
-  [![Ollama](https://img.shields.io/badge/Ollama-FFFFFF?style=for-the-badge&logo=ollama&logoColor=black)](https://ollama.com/)
   [![Hugging Face](https://img.shields.io/badge/Hugging%20Face-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)](https://huggingface.co/)
+  [![Ollama](https://img.shields.io/badge/Ollama-FFFFFF?style=for-the-badge&logo=ollama&logoColor=black)](https://ollama.com/)
   [![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
 </div>
 
@@ -26,7 +26,7 @@
 
 ## Overview
 
-💡 **Haalo** is a multi-turn RAG chatbot for conversational analysis of academic documents, allowing users to ask questions about uploaded PDFs and receive answers grounded exclusively in the document.
+💡 **Haalo** is a multi-turn RAG chatbot designed for conversational analysis of academic documents, allowing users to ask questions about uploaded files and receive answers grounded exclusively in their content.
 
 https://github.com/user-attachments/assets/95e59c32-7bc3-471b-8e09-df08de1f47f1
 
