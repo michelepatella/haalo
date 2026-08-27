@@ -39,17 +39,17 @@ Users upload an academic document in PDF format.
 The uploaded document undergoes a multi-stage preprocessing pipeline:  
 
 > **`2.1 • PDF to Markdown Conversion`**  
-> The PDF is converted to Markdown to preserve semantic structure and accurately extract content.
+> The PDF is converted to Markdown to preserve semantic structure and accurately extract content using PyMuPDF4LLM.
 >
 > **`2.2 • Structure-Aware Chunking`**  
-> The Markdown content is first split by document sections, then divided into token-bounded chunks.
+> The Markdown content is first split by document sections, then divided into token-bounded chunks with LlamaIndex.
 >
 > **`2.3 • Embedding & Vector Indexing`**  
-> Each chunk is converted into an embedding and stored in a ChromaDB vector store for similarity search.
+> Each chunk is converted into an embedding (Hugging Face) and stored in a ChromaDB vector store using LlamaIndex.
 
 **↓**  
 **`3 • Conversational Retrieval & Generation`**  
-For each user query, the top-k most relevant document chunks are retrieved from ChromaDB based on semantic similarity and used by a locally hosted LLM to generate document-grounded responses in a multi-turn conversation.
+For each user query, the top-k most relevant document chunks are retrieved from ChromaDB based on semantic similarity and used by a local LLM (Ollama) to generate context-grounded responses in a multi-turn conversation with LlamaIndex.
 
 > [!TIP]
 > Customize the RAG pipeline by modifying the following parameters in `src/config.py`:
