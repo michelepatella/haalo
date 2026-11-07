@@ -45,6 +45,8 @@ PREPROCESS_PAGE_SPINNER_MESSAGE = "Processing document..."
 
 PREPROCESS_PAGE_COLUMN_LAYOUT_NARROW = [1, 2, 1]
 
+PREPROCESS_PAGE_PUBGUARD_VERDICT_PASS_KEY = "pass"
+
 PREPROCESS_PAGE_ERROR_MESSAGE = (
     "Something went wrong while processing your document."
 )

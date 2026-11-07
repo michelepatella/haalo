@@ -3,6 +3,7 @@
 import os
 
 import chromadb
+import fitz
 import pymupdf4llm
 import streamlit as st
 from llama_index.core import Document, StorageContext, VectorStoreIndex
@@ -10,11 +11,13 @@ from llama_index.core.node_parser import MarkdownNodeParser, SentenceSplitter
 from llama_index.core.schema import BaseNode
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.vector_stores.chroma import ChromaVectorStore
+from pubguard import PubGuard
 
 from config import config
 from const import (
     PREPROCESS_PAGE_COLUMN_LAYOUT_NARROW,
     PREPROCESS_PAGE_ERROR_MESSAGE,
+    PREPROCESS_PAGE_PUBGUARD_VERDICT_PASS_KEY,
     PREPROCESS_PAGE_SPINNER_MESSAGE,
     PREPROCESS_PAGE_STYLE_PATH,
     SESSION_STATE_INDEX_KEY,
@@ -94,6 +97,39 @@ def render_preprocess_page() -> None:
             # Clean up the uploaded document
             if os.path.exists(uploaded_doc_path):
                 os.remove(uploaded_doc_path)
+
+
+def _is_valid_academic_doc(pdf_path: str) -> bool:
+    """Check if the uploaded document is a valid academic document.
+
+    This function uses a lighweight classifier—PubGuard—to screen the content
+    of the uploaded PDF document—extracted with PyMuPDF—and determine whether
+    it is a valid academic document.
+
+    Args:
+        pdf_path (str):
+            The absolute path to the PDF document.
+
+    Returns:
+        bool:
+            True if the document is a valid academic document, False otherwise.
+    """
+    try:
+        # Open document using PyMuPDF and extract the text
+        doc = fitz.open(pdf_path)
+        text = " ".join(page.get_text() for page in doc)
+        doc.close()
+
+        # Initialize PubGuard
+        guard = PubGuard()
+        guard.initialize()
+
+        # Check if the uploaded document is a valid academic document
+        verdict = guard.screen(text)
+
+        return verdict[PREPROCESS_PAGE_PUBGUARD_VERDICT_PASS_KEY]
+    except Exception:
+        return False
 
 
 def _pdf_to_md(pdf_path: str) -> str | None:
@@ -229,10 +265,11 @@ def _run_preprocess_pipeline(
     """Execute the complete preprocess pipeline.
 
     This function orchestrates the entire preprocess pipeline:
-    1. Convert the PDF document to Markdown
-    2. Chunk the Markdown document into sections
-    3. Compute embeddings for each chunk
-    4. Store the embeddings in a vector database
+    1. Check if the uploaded document is a valid academic document
+    2. Convert the PDF document to Markdown
+    3. Chunk the Markdown document into sections
+    4. Compute embeddings for each chunk
+    5. Store the embeddings in a vector database
 
     Args:
         uploaded_doc_path (str):
@@ -250,18 +287,22 @@ def _run_preprocess_pipeline(
         VectorStoreIndex | None:
             The resulting vector database instance, or None if any step fails.
     """
-    # 1. Convert the PDF document to Markdown
+    # 1. Check if the uploaded document is a valid academic document
+    if not _is_valid_academic_doc(uploaded_doc_path):
+        return None
+
+    # 2. Convert the PDF document to Markdown
     md_content = _pdf_to_md(uploaded_doc_path)
     if md_content is None:
         return None
 
-    # 2. Chunk the Markdown document into sections
+    # 3. Chunk the Markdown document into sections
     chunks = _chunk_md(md_content, chunk_size, chunk_overlap)
     if chunks is None:
         return None
 
-    # 3. Compute embeddings for each chunk &
-    # 4. Store the embeddings in a vector database
+    # 4. Compute embeddings for each chunk &
+    # 5. Store the embeddings in a vector database
     return _create_and_store_embeddings(
         chunks,
         embedding_model_name,
