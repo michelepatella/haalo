@@ -9,6 +9,7 @@ import urllib.request
 
 from benchmarks.const import (
     PDF_URLS_JSON_PATH,
+    PREPROCESSING_REPORT_DETAILS_ACADEMIC_DOCUMENT_VALIDATION_TIME_KEY,
     PREPROCESSING_REPORT_DETAILS_CHUNKING_TIME_KEY,
     PREPROCESSING_REPORT_DETAILS_EMBED_AND_INDEXING_TIME_KEY,
     PREPROCESSING_REPORT_DETAILS_KEY,
@@ -16,6 +17,7 @@ from benchmarks.const import (
     PREPROCESSING_REPORT_DETAILS_PDF_ID_KEY,
     PREPROCESSING_REPORT_DETAILS_TOT_TIME_KEY,
     PREPROCESSING_REPORT_JSON_PATH,
+    PREPROCESSING_REPORT_SUMMARY_AVG_ACADEMIC_DOCUMENT_VALIDATION_TIME_KEY,
     PREPROCESSING_REPORT_SUMMARY_AVG_CHUNKING_TIME_KEY,
     PREPROCESSING_REPORT_SUMMARY_AVG_EMBED_AND_INDEXING_TIME_KEY,
     PREPROCESSING_REPORT_SUMMARY_AVG_PDF2MD_TIME_KEY,
@@ -31,6 +33,7 @@ from src.const import (
 from src.preprocess import (
     _chunk_md,
     _create_and_store_embeddings,
+    _is_valid_academic_doc,
     _pdf_to_md,
 )
 
@@ -119,14 +122,21 @@ def _benchmark_single_pdf(pdf_path: str, pdf_id: str) -> dict | None:
     # Start total timer for this PDF
     t_start_tot = time.perf_counter()
 
-    # 1. PDF to Markdown conversion
+    # 1. Academic document validation
+    t0 = time.perf_counter()
+    is_valid = _is_valid_academic_doc(pdf_path)
+    t_academic_validation = time.perf_counter() - t0
+    if not is_valid:
+        return None
+
+    # 2. PDF to Markdown conversion
     t0 = time.perf_counter()
     md_content = _pdf_to_md(pdf_path)
     t_pdf2md = time.perf_counter() - t0
     if md_content is None:
         return None
 
-    # 2. Structure-Aware Chunking
+    # 3. Structure-Aware Chunking
     t0 = time.perf_counter()
     chunks = _chunk_md(
         md_content,
@@ -137,7 +147,7 @@ def _benchmark_single_pdf(pdf_path: str, pdf_id: str) -> dict | None:
     if chunks is None:
         return None
 
-    # 3. Embedding & Vector Indexing
+    # 4. Embedding & Vector Indexing
     t0 = time.perf_counter()
     _ = _create_and_store_embeddings(
         chunks,
@@ -151,6 +161,10 @@ def _benchmark_single_pdf(pdf_path: str, pdf_id: str) -> dict | None:
 
     return {
         PREPROCESSING_REPORT_DETAILS_PDF_ID_KEY: pdf_id,
+        PREPROCESSING_REPORT_DETAILS_ACADEMIC_DOCUMENT_VALIDATION_TIME_KEY: round(
+            t_academic_validation,
+            3,
+        ),
         PREPROCESSING_REPORT_DETAILS_PDF2MD_TIME_KEY: round(
             t_pdf2md,
             3,
@@ -188,6 +202,10 @@ def _save_report(pdf_reports: list, save_path: str) -> dict:
         return {}
 
     # Calculate average times for each step of the preprocessing pipeline
+    avg_academic_document_validation = sum(
+        m[PREPROCESSING_REPORT_DETAILS_ACADEMIC_DOCUMENT_VALIDATION_TIME_KEY]
+        for m in pdf_reports
+    ) / len(pdf_reports)
     avg_pdf2md = sum(
         m[PREPROCESSING_REPORT_DETAILS_PDF2MD_TIME_KEY] for m in pdf_reports
     ) / len(pdf_reports)
@@ -206,6 +224,10 @@ def _save_report(pdf_reports: list, save_path: str) -> dict:
     report = {
         PREPROCESSING_REPORT_SUMMARY_KEY: {
             PREPROCESSING_REPORT_SUMMARY_TOT_PDFS_KEY: len(pdf_reports),
+            PREPROCESSING_REPORT_SUMMARY_AVG_ACADEMIC_DOCUMENT_VALIDATION_TIME_KEY: round(
+                avg_academic_document_validation,
+                3,
+            ),
             PREPROCESSING_REPORT_SUMMARY_AVG_PDF2MD_TIME_KEY: round(
                 avg_pdf2md,
                 3,
@@ -255,6 +277,9 @@ def _display_report_summary(report: dict) -> None:
         print("-" * 56)
         print(f"| {'Metric':<36} | {'Value':>13} |")
         print("-" * 56)
+        print(
+            f"| {'Avg. Academic Document Validation':<36} | {summary[PREPROCESSING_REPORT_SUMMARY_AVG_ACADEMIC_DOCUMENT_VALIDATION_TIME_KEY]:>11.3f} s |",
+        )
         print(
             f"| {'Avg. PDF to Markdown Conversion':<36} | {summary[PREPROCESSING_REPORT_SUMMARY_AVG_PDF2MD_TIME_KEY]:>11.3f} s |",
         )

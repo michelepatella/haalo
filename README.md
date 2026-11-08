@@ -38,13 +38,18 @@ Users upload an academic document in PDF format.
 **`2 • Document Preprocessing`**  
 The uploaded document undergoes a multi-stage preprocessing pipeline:  
 
-> **`2.1 • PDF to Markdown Conversion`**  
+> **`2.1 • Academic Document Validation`**  
+> The extracted PDF text is screened with PubGuard to verify that the
+> document is a valid academic document before continuing with downstream
+> processing.
+>
+> **`2.2 • PDF to Markdown Conversion`**  
 > The PDF is converted to Markdown to preserve semantic structure and accurately extract content using PyMuPDF4LLM.
 >
-> **`2.2 • Structure-Aware Chunking`**  
+> **`2.3 • Structure-Aware Chunking`**  
 > The Markdown content is first split by document sections, then divided into token-bounded chunks with LlamaIndex.
 >
-> **`2.3 • Embedding & Vector Indexing`**  
+> **`2.4 • Embedding & Vector Indexing`**  
 > Each chunk is converted into an embedding (Hugging Face) and stored in a ChromaDB vector store using LlamaIndex.
 
 **↓**  
@@ -68,8 +73,8 @@ For each user query, the top-k most relevant document chunks are retrieved from 
 ### Prerequisites
 
 **Python**  
-Required version: 3.14.6  
-Link: https://www.python.org/downloads/release/python-3146/
+Required version: >=3.14,<3.15  
+Link: https://www.python.org/downloads/
 
 > [!WARNING]
 > Compatibility with earlier or later Python versions has not been tested.
@@ -103,7 +108,8 @@ After installation, run the application locally:
 make run
 ```
 
-This command starts the Ollama service, downloads the configured LLM if needed, and launches the Streamlit application.
+This command starts the Ollama service, downloads the configured LLM, and the
+PubGuard document-type classifier if needed, then launches the Streamlit application.
 
 ## License
 
