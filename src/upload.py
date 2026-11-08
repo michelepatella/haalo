@@ -10,11 +10,12 @@ from const import (
     UPLOAD_PAGE_COLUMN_LAYOUT_NARROW,
     UPLOAD_PAGE_COLUMN_LAYOUT_WIDE,
     UPLOAD_PAGE_DISCLAIMER,
-    UPLOAD_PAGE_ERROR_MESSAGE,
+    UPLOAD_PAGE_EMPTY_FILE_ERROR_MESSAGE,
     UPLOAD_PAGE_FILE_UPLOADER_LABEL,
     UPLOAD_PAGE_FILE_UPLOADER_LABEL_VISIBILITY,
     UPLOAD_PAGE_HEADER,
     UPLOAD_PAGE_PROCEED_BUTTON_LABEL,
+    UPLOAD_PAGE_SAVE_ERROR_MESSAGE,
     UPLOAD_PAGE_STYLE_PATH,
     UPLOAD_PAGE_SUBHEADER,
     UPLOAD_PAGE_UPLOADED_DOC_FORMAT,
@@ -68,17 +69,21 @@ def render_upload_page() -> None:
         _, col_btn, _ = st.columns(UPLOAD_PAGE_COLUMN_LAYOUT_NARROW)
         with col_btn:
             if st.button(UPLOAD_PAGE_PROCEED_BUTTON_LABEL):
-                uploaded_doc_path = _save_file_to_temp(
-                    uploaded_file,
-                    UPLOAD_PAGE_UPLOADED_DOC_FORMAT,
-                )
-                if uploaded_doc_path is not None:
-                    st.session_state[SESSION_STATE_UPLOADED_DOC_PATH_KEY] = (
-                        uploaded_doc_path
-                    )
-                    st.rerun()
+                if uploaded_file.size == 0:
+                    st.error(UPLOAD_PAGE_EMPTY_FILE_ERROR_MESSAGE)
                 else:
-                    st.error(UPLOAD_PAGE_ERROR_MESSAGE)
+                    try:
+                        uploaded_doc_path = _save_file_to_temp(
+                            uploaded_file,
+                            UPLOAD_PAGE_UPLOADED_DOC_FORMAT,
+                        )
+                    except OSError:
+                        st.error(UPLOAD_PAGE_SAVE_ERROR_MESSAGE)
+                    else:
+                        st.session_state[
+                            SESSION_STATE_UPLOADED_DOC_PATH_KEY
+                        ] = uploaded_doc_path
+                        st.rerun()
 
     # Disclaimer
     _, col_disclaimer, _ = st.columns(UPLOAD_PAGE_COLUMN_LAYOUT_NARROW)
@@ -92,7 +97,7 @@ def render_upload_page() -> None:
 def _save_file_to_temp(
     uploaded_file: st.runtime.uploaded_file_manager.UploadedFile,
     format: str,
-) -> str | None:
+) -> str:
     """Save an uploaded file to a temporary location on disk.
 
     This function takes a Streamlit UploadedFile object, reads its content,
@@ -105,15 +110,16 @@ def _save_file_to_temp(
             The file format (extension) to use for the temporary file.
 
     Returns:
-        str | None:
-            The absolute path to the saved temporary file, or None if saving failed.
+        str:
+            The absolute path to the saved temporary file.
+
+    Raises:
+        OSError:
+            If the temporary file cannot be created or written.
     """
-    try:
-        with tempfile.NamedTemporaryFile(
-            delete=False,
-            suffix=f".{format}",
-        ) as temp_file:
-            temp_file.write(uploaded_file.read())
-            return temp_file.name
-    except Exception:
-        return None
+    with tempfile.NamedTemporaryFile(
+        delete=False,
+        suffix=f".{format}",
+    ) as temp_file:
+        temp_file.write(uploaded_file.getvalue())
+        return temp_file.name

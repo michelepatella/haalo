@@ -32,8 +32,11 @@ UPLOAD_PAGE_DISCLAIMER = (
     "Other document types may produce suboptimal results."
 )
 
-UPLOAD_PAGE_ERROR_MESSAGE = (
-    "Something went wrong while uploading your document."
+UPLOAD_PAGE_EMPTY_FILE_ERROR_MESSAGE = (
+    "The selected file is empty. Please choose a non-empty PDF document."
+)
+UPLOAD_PAGE_SAVE_ERROR_MESSAGE = (
+    "We couldn't save your document. Please try again or choose another PDF."
 )
 
 UPLOAD_PAGE_STYLE_PATH = Path("assets/styles/upload.css")
@@ -47,8 +50,20 @@ PREPROCESS_PAGE_COLUMN_LAYOUT_NARROW = [1, 2, 1]
 
 PREPROCESS_PAGE_PUBGUARD_VERDICT_PASS_KEY = "pass"
 
-PREPROCESS_PAGE_ERROR_MESSAGE = (
-    "Something went wrong while processing your document."
+PREPROCESS_PAGE_ACADEMIC_VALIDATION_ERROR_MESSAGE = (
+    "We couldn't verify that this is a readable academic PDF. "
+    "Please upload an academic document and try again."
+)
+PREPROCESS_PAGE_PDF_CONVERSION_ERROR_MESSAGE = (
+    "We couldn't read the content of this PDF. "
+    "Please check that the file is valid and try again."
+)
+PREPROCESS_PAGE_CHUNKING_ERROR_MESSAGE = (
+    "We couldn't organize the document content for processing. "
+    "Please try another PDF."
+)
+PREPROCESS_PAGE_INDEXING_ERROR_MESSAGE = (
+    "We couldn't prepare the document for search. Please try again."
 )
 
 PREPROCESS_PAGE_STYLE_PATH = Path("assets/styles/preprocess.css")
@@ -75,10 +90,11 @@ CHAT_PAGE_USER_AVATAR = "👤"
 CHAT_PAGE_STYLE_PATH = Path("assets/styles/chat.css")
 
 CHAT_PAGE_INITIALIZATION_ERROR_MESSAGE = (
-    "Something went wrong while initializing the chat engine."
+    "We couldn't start the chat. Please make sure Ollama is running "
+    "and try again."
 )
 CHAT_PAGE_RESPONSE_GENERATION_ERROR_MESSAGE = (
-    "Something went wrong while generating the response."
+    "We couldn't generate a response. Please try again."
 )
 
 #########################################################################################

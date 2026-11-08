@@ -15,8 +15,11 @@ from pubguard import PubGuard
 
 from config import config
 from const import (
+    PREPROCESS_PAGE_ACADEMIC_VALIDATION_ERROR_MESSAGE,
+    PREPROCESS_PAGE_CHUNKING_ERROR_MESSAGE,
     PREPROCESS_PAGE_COLUMN_LAYOUT_NARROW,
-    PREPROCESS_PAGE_ERROR_MESSAGE,
+    PREPROCESS_PAGE_INDEXING_ERROR_MESSAGE,
+    PREPROCESS_PAGE_PDF_CONVERSION_ERROR_MESSAGE,
     PREPROCESS_PAGE_PUBGUARD_VERDICT_PASS_KEY,
     PREPROCESS_PAGE_SPINNER_MESSAGE,
     PREPROCESS_PAGE_STYLE_PATH,
@@ -81,7 +84,7 @@ def render_preprocess_page() -> None:
         try:
             # Run preprocess pipeline and save the resulting
             # index in session state
-            index = _run_preprocess_pipeline(
+            index, error_message = _run_preprocess_pipeline(
                 uploaded_doc_path,
                 config.chunk_size,
                 config.chunk_overlap,
@@ -92,7 +95,8 @@ def render_preprocess_page() -> None:
                 st.session_state[SESSION_STATE_INDEX_KEY] = index
                 st.rerun()
             else:
-                st.error(PREPROCESS_PAGE_ERROR_MESSAGE)
+                assert error_message is not None
+                st.error(error_message)
         finally:
             # Clean up the uploaded document
             if os.path.exists(uploaded_doc_path):
@@ -261,7 +265,7 @@ def _run_preprocess_pipeline(
     chunk_overlap: int,
     embedding_model_name: str,
     collection_name: str,
-) -> VectorStoreIndex | None:
+) -> tuple[VectorStoreIndex | None, str | None]:
     """Execute the complete preprocess pipeline.
 
     This function orchestrates the entire preprocess pipeline:
@@ -284,27 +288,32 @@ def _run_preprocess_pipeline(
             The name of the vector store collection.
 
     Returns:
-        VectorStoreIndex | None:
-            The resulting vector database instance, or None if any step fails.
+        tuple[VectorStoreIndex | None, str | None]:
+            The resulting vector database instance and no error message if
+            successful, or None and a user-facing error message if a step fails.
     """
     # 1. Check if the uploaded document is a valid academic document
     if not _is_valid_academic_doc(uploaded_doc_path):
-        return None
+        return None, PREPROCESS_PAGE_ACADEMIC_VALIDATION_ERROR_MESSAGE
 
     # 2. Convert the PDF document to Markdown
     md_content = _pdf_to_md(uploaded_doc_path)
     if md_content is None:
-        return None
+        return None, PREPROCESS_PAGE_PDF_CONVERSION_ERROR_MESSAGE
 
     # 3. Chunk the Markdown document into sections
     chunks = _chunk_md(md_content, chunk_size, chunk_overlap)
     if chunks is None:
-        return None
+        return None, PREPROCESS_PAGE_CHUNKING_ERROR_MESSAGE
 
     # 4. Compute embeddings for each chunk &
     # 5. Store the embeddings in a vector database
-    return _create_and_store_embeddings(
+    index = _create_and_store_embeddings(
         chunks,
         embedding_model_name,
         collection_name,
     )
+    if index is None:
+        return None, PREPROCESS_PAGE_INDEXING_ERROR_MESSAGE
+
+    return index, None

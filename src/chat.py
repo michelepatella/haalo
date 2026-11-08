@@ -82,7 +82,7 @@ def render_chat_page() -> None:
 
     # Initialize the chat engine
     if SESSION_STATE_CHAT_ENGINE_KEY not in st.session_state:
-        chat_engine = _initialize_chat_engine(
+        chat_engine, error_message = _initialize_chat_engine(
             st.session_state[SESSION_STATE_INDEX_KEY],
             config.llm_model_name,
             SYSTEM_PROMPT,
@@ -93,7 +93,7 @@ def render_chat_page() -> None:
         if chat_engine is not None:
             st.session_state[SESSION_STATE_CHAT_ENGINE_KEY] = chat_engine
         else:
-            st.error(CHAT_PAGE_INITIALIZATION_ERROR_MESSAGE)
+            st.error(error_message)
             return
 
     # Initialize the message history
@@ -167,7 +167,7 @@ def _initialize_chat_engine(
     system_prompt: str,
     chat_mode: str,
     similarity_top_k: int,
-) -> BaseChatEngine | None:
+) -> tuple[BaseChatEngine | None, str | None]:
     """Initialize the chat engine.
 
     This function initializes the chat engine using the provided
@@ -186,15 +186,18 @@ def _initialize_chat_engine(
             The number of top similar documents to retrieve for context in the chat engine.
 
     Returns:
-        BaseChatEngine | None: The initialized chat engine, or None if failed.
+        tuple[BaseChatEngine | None, str | None]:
+            The initialized chat engine and None on success, or None and a
+            user-facing error message if initialization fails.
     """
     try:
         llm = Ollama(model=model)
-        return index.as_chat_engine(
+        chat_engine = index.as_chat_engine(
             chat_mode=chat_mode,
             llm=llm,
             similarity_top_k=similarity_top_k,
             system_prompt=system_prompt,
         )
+        return chat_engine, None
     except Exception:
-        return None
+        return None, CHAT_PAGE_INITIALIZATION_ERROR_MESSAGE
