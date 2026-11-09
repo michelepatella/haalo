@@ -1,11 +1,48 @@
 {
   "summary": {
     "tot_pdfs": 732,
-    "avg_academic_document_validation_s": 0.318,
-    "avg_pdf2md_s": 5.948,
-    "avg_chunking_s": 0.028,
-    "avg_embed_and_indexing_s": 0.887,
-    "avg_tot_s": 7.181
+    "statistics": {
+      "academic_document_validation_s": {
+        "mean": 0.318,
+        "median": 0.22,
+        "p95": 0.778,
+        "p99": 1.279,
+        "min": 0.141,
+        "max": 4.169
+      },
+      "pdf2md_s": {
+        "mean": 5.948,
+        "median": 3.389,
+        "p95": 11.587,
+        "p99": 32.366,
+        "min": 0.483,
+        "max": 840.662
+      },
+      "chunking_s": {
+        "mean": 0.028,
+        "median": 0.023,
+        "p95": 0.063,
+        "p99": 0.115,
+        "min": 0.002,
+        "max": 0.558
+      },
+      "embed_and_indexing_s": {
+        "mean": 0.887,
+        "median": 0.791,
+        "p95": 1.737,
+        "p99": 2.956,
+        "min": 0.136,
+        "max": 7.063
+      },
+      "tot_s": {
+        "mean": 7.181,
+        "median": 4.55,
+        "p95": 13.762,
+        "p99": 34.465,
+        "min": 0.811,
+        "max": 842.967
+      }
+    }
   },
   "details": [
     {
