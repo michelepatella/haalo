@@ -27,3 +27,5 @@ make benchmark-preprocessing
 | [`0b6cfc4`](https://github.com/michelepatella/haalo/commit/0b6cfc4) | MacBook Air M2, 8 GB | [View report](https://github.com/michelepatella/haalo/blob/0b6cfc4/benchmarks/preprocessing/report.json) |
 | [`c713e7b`](https://github.com/michelepatella/haalo/commit/c713e7b) | MacBook Air M2, 8 GB | [View report](https://github.com/michelepatella/haalo/blob/c713e7b/benchmarks/preprocessing/report.json) |
 | <strong>[`b0d631f`](https://github.com/michelepatella/haalo/commit/b0d631f)</strong> | **MacBook Air M2, 8 GB** | <strong>[View report](https://github.com/michelepatella/haalo/blob/b0d631f/benchmarks/preprocessing/report.json)</strong> |
+
+<sub>Results are ordered chronologically, from oldest to newest (top to bottom).</sub>
